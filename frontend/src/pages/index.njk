@@ -1,0 +1,12 @@
+{% extends "layouts/base.njk" %}
+{% set pagetitle = "Homepage" %}
+
+{% block main %}
+	{% include "layouts/_hero.njk" %}
+	{% include "layouts/_trends.njk" %}
+	{% include "layouts/_journey.njk" %}
+	{% include "layouts/_latest-collection.njk" %}
+	{% include "layouts/_testimonial.njk" %}
+	{% include "layouts/_faq.njk" %}
+	{% include "layouts/_cta-banner.njk" %}
+{% endblock %}

@@ -1,0 +1,193 @@
+// ============================================================
+// STYLELOOM — Mixins
+// ============================================================
+
+@use "sass:map";
+
+// --- Breakpoints ---
+// mobile-first: xs → sm → lg
+$breakpoints: (
+	"xs": 390px,
+	"sm": 576px,
+	"md": 768px,
+	"lg": 1024px,
+	"xl": 1440px,
+	"xxl": 1920px
+);
+
+@mixin media-up($breakpoint) {
+	@if map.has-key($breakpoints, $breakpoint) {
+		$value: map.get($breakpoints, $breakpoint);
+
+		@media (min-width: $value) {
+			@content;
+		}
+	} @else {
+		@warn "Unknown breakpoint: #{$breakpoint}. Please use a value from the $breakpoints map.";
+	}
+}
+
+@mixin media-down($breakpoint) {
+	@if map.has-key($breakpoints, $breakpoint) {
+		$value: map.get($breakpoints, $breakpoint) - 1px;
+
+		@media (max-width: $value) {
+			@content;
+		}
+	} @else {
+		@warn "Unknown breakpoint: #{$breakpoint}. Please use a value from the $breakpoints map.";
+	}
+}
+
+// Shorthands: `@include sm { … }` = media-up("sm"), `@include sm-down { … }` = media-down("sm")
+@mixin xs {
+	@include media-up("xs") {
+		@content;
+	}
+}
+@mixin sm {
+	@include media-up("sm") {
+		@content;
+	}
+}
+@mixin md {
+	@include media-up("md") {
+		@content;
+	}
+}
+@mixin lg {
+	@include media-up("lg") {
+		@content;
+	}
+}
+@mixin xl {
+	@include media-up("xl") {
+		@content;
+	}
+}
+@mixin xxl {
+	@include media-up("xxl") {
+		@content;
+	}
+}
+
+@mixin xs-down {
+	@include media-down("xs") {
+		@content;
+	}
+}
+@mixin sm-down {
+	@include media-down("sm") {
+		@content;
+	}
+}
+@mixin md-down {
+	@include media-down("md") {
+		@content;
+	}
+}
+@mixin lg-down {
+	@include media-down("lg") {
+		@content;
+	}
+}
+@mixin xl-down {
+	@include media-down("xl") {
+		@content;
+	}
+}
+@mixin xxl-down {
+	@include media-down("xxl") {
+		@content;
+	}
+}
+
+// --- Container ---
+@mixin container {
+	width: 100%;
+	max-width: var(--container-max);
+	margin-inline: auto;
+	padding-inline: var(--container-pad);
+}
+
+// --- Grid ---
+@mixin grid($cols-mob: 1, $cols-sm: 2, $cols-lg: 4, $gap: var(--space-6)) {
+	display: grid;
+	grid-template-columns: repeat(#{$cols-mob}, 1fr);
+	gap: $gap;
+
+	@include sm {
+		grid-template-columns: repeat(#{$cols-sm}, 1fr);
+	}
+	@include lg {
+		grid-template-columns: repeat(#{$cols-lg}, 1fr);
+	}
+}
+
+// --- Flex ---
+@mixin flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@mixin flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+// --- Typography ---
+@mixin heading($size: var(--text-3xl)) {
+	font-family: var(--font-display);
+	font-size: $size;
+	font-weight: var(--font-bold);
+	line-height: var(--leading-tight);
+	color: var(--color-text-primary);
+}
+
+@mixin truncate($lines: 1) {
+	@if $lines == 1 {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	} @else {
+		display: -webkit-box;
+		-webkit-line-clamp: $lines;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+}
+
+// --- Hover card lift ---
+@mixin card-hover {
+	transition:
+		transform var(--transition-base),
+		box-shadow var(--transition-base);
+	&:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-hover);
+	}
+}
+
+// --- Visually hidden (accessibility) ---
+@mixin sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+@mixin hideScrollBar {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}

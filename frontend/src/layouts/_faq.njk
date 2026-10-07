@@ -1,0 +1,67 @@
+{% from 'components/menu-buttons-secondary.njk' import menuButtonsSecondary %}
+{% from 'components/button.njk' import button %}
+{%
+	set menuItems = [
+		{ text: "All", href: "#" },
+		{ text: "Ordering", href: "#" },
+		{ text: "Shipping", href: "#", active: true },
+		{ text: "Returns", href: "#" },
+		{ text: "Support", href: "#" }
+	]
+%}
+{%
+	set faqs = [
+		{
+			question: "How can I place an order on StyleLoom?",
+			answer: "Ordering is easy! Simply browse our website, add items to your cart, and proceed to checkout. Follow the prompts to enter your details and complete your purchase."
+		}
+		, {
+			question: "What payment methods do you accept?",
+			answer: "We accept a variety of payment methods, including credit/debit cards, net banking, and select digital wallets. Choose the option that suits you best during checkout."
+		}
+		, {
+			question: "How can I track my order?",
+			answer: "Once your order is dispatched, you'll receive a tracking number via email. Use this number to track your package in real-time on our website."
+		}
+		, {
+			question: "Can I modify or cancel my order after placing it?",
+			answer: "Unfortunately, once an order is confirmed, modifications or cancellations may not be possible. Please review your order carefully before completing the purchase."
+		}
+		, {
+			question: "How do I initiate a return?",
+			answer: "Visit our Returns page and follow the provided instructions. Ensure your item meets our return criteria, and our team will guide you through the process."
+		}
+		, {
+			question: "Do you offer exchanges for products?",
+			answer: "At this time, we don't offer direct product exchanges. If you'd like a different item, please initiate a return and place a new order."
+		}
+	]
+%}
+
+{% macro faqItems(items, class = "") %}
+	{% set classes = ["faq__item", class] | select("truthy") | join(" ") %}
+
+	{% for item in items %}
+		<article class="{{ classes }}">
+			<h3 class="faq__question">{{ item.question }}</h3>
+			<p class="faq__answer">{{ item.answer }}</p>
+		</article>
+	{% endfor %}
+{% endmacro %}
+
+<section class="faq">
+	<div class="container">
+		<header class="faq__header">
+			<h2>Have Questions? We Have Answers.</h2>
+			<p>Ease into the world of StyleLoom with clarity. Our FAQs cover a spectrum of topics.</p>
+			{{ menuButtonsSecondary(menuItems, ariaLabel = "FAQ categories") }}
+		</header>
+		<div class="faq__grid">
+			{# --rows: desktop fills two columns top-to-bottom #}
+			<div class="holder" style="--rows: {{ (faqs | length / 2) | round(0, 'ceil') }}">
+				{{ faqItems(faqs) }}
+				{{ button(class = "", loadMore = true, text = "View All", moreText = "View All", lessText = "Hide", icon = "/src/assets/images/icon-arrow-down.svg") }}
+			</div>
+		</div>
+	</div>
+</section>

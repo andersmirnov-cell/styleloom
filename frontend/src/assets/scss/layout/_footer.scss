@@ -1,0 +1,14 @@
+@use "../utils/mixins" as *;
+
+.site-footer {
+	border-top: var(--base-border-style);
+	border-top-width: var(--base-border-w);
+
+	.marquee-links {
+		border-top: none;
+	}
+
+	.footer-brand {
+		border-top: none;
+	}
+}

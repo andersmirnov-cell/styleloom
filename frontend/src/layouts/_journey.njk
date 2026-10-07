@@ -1,0 +1,38 @@
+{% macro journeyItems(items, class = "") %}
+	{% set classes = ["journey__step", class] | select("truthy") | join(" ") %}
+
+	{% for item in items %}
+		<div class="{{ classes }}">
+			<span class="journey__step-number">
+				Step
+				{% if (loop.index < 10) %}0{{ loop.index }}{% else %}{{ loop.index }}{% endif %}
+			</span>
+			{% if item.title %}<h3>{{ item.title }}</h3>{% endif %}
+			{% if item.text %}<p>{{ item.text }}</p>{% endif %}
+		</div>
+	{% endfor %}
+{% endmacro %}
+
+{%
+	set Items = [
+		{ title: "Discover Trends", text: "Explore our curated collection of over 1000 styles, spanning global fashion trends."},
+		{ title: "Effortless Navigation", text: "Intuitive filters and categories help you find the perfect pieces tailored to your style."},
+		{ title: "Secure Checkout", text: "Multiple payment options and encrypted transactions ensure a safe and hassle-free purchase."},
+		{ title: "Unbox Happiness", text: "Unbox a fashion-forward experience delivered right to your door, ready to elevate your style."}
+	]
+%}
+
+<section class="journey">
+	<div class="container">
+		<header class="journey__header">
+			<h2>Navigating the StyleLoom Fashion Journey.</h2>
+			<p>
+				At StyleLoom, we've designed a straightforward shopping experience to make fashion
+				accessible.
+			</p>
+		</header>
+		<div class="journey__steps">
+			<div class="holder">{{ journeyItems(Items) }}</div>
+		</div>
+	</div>
+</section>

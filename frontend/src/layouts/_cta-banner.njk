@@ -1,0 +1,17 @@
+{% from 'components/button.njk' import button %}
+
+<section class="cta-banner">
+	<div class="container">
+		<div class="cta-banner__holder">
+			<div class="cta-banner__text">
+				<h2>Elevate Your Wardrobe</h2>
+				<p>
+					Don't miss out – experience the epitome of fashion by clicking 'Buy Now' and
+					embrace a world of chic elegance delivered to your doorstep. Your style journey
+					begins here.
+				</p>
+			</div>
+			{{ button(text = "Shop Now", href = "#", class = "btn--dark", icon = "/src/assets/images/icon-arrow-up-right.svg") }}
+		</div>
+	</div>
+</section>

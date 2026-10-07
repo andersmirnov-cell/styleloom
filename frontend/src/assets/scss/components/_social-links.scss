@@ -1,0 +1,53 @@
+@use "../utils/mixins" as *;
+
+/* .social-links */
+.social-links {
+	--social-size: 48px;
+	--social-icon-size: 23px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	@include xl {
+		--social-size: 56px;
+		--social-icon-size: 26px;
+	}
+
+	@include xxl {
+		--social-size: 66px;
+		--social-icon-size: 32px;
+		gap: 20px;
+	}
+
+	// .social-links__link
+	&__link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--social-size);
+		aspect-ratio: 1;
+		border-radius: var(--radius-md);
+		background: var(--brown-80);
+		color: var(--color-text-inverse);
+		font-size: var(--social-icon-size);
+		transition: background var(--transition-base);
+
+		@include xxl {
+			border-radius: var(--radius-lg);
+		}
+
+		&:hover,
+		&:focus-visible {
+			background: var(--brown-60);
+		}
+
+		// Font Awesome webfont glyph
+		i {
+			display: block;
+			line-height: 1;
+		}
+	}
+}

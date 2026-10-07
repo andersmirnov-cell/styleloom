@@ -1,0 +1,78 @@
+@use "../utils/mixins" as *;
+
+/* .cta-banner */
+.cta-banner {
+	margin-block-end: var(--space-y-base);
+
+	// .cta-banner__holder
+	&__holder {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 30px;
+		padding: 51px 30px;
+		border-radius: var(--radius-xl);
+		background: var(--brown-70) url("../../images/bg-cta-banner.svg") no-repeat right -110px
+			top -137px / 306px auto;
+		overflow: clip;
+
+		@include lg {
+			flex-direction: row;
+			align-items: center;
+			gap: 60px;
+			padding: 80px 120px 80px 80px;
+			background-size: 524px auto;
+			background-position: right -18px top -246px;
+		}
+
+		@include xl {
+			gap: 150px;
+		}
+
+		@include xxl {
+			padding: 100px 142px 100px 100px;
+			border-radius: var(--radius-block-base);
+			background-size: 623px auto;
+			background-position: right -67px top -246px;
+			max-width: 1584px;
+			margin-inline: auto;
+		}
+	}
+
+	// .cta-banner__text
+	&__text {
+		flex-grow: 1;
+		min-width: 0;
+
+		h2 {
+			margin-block-end: 12px;
+			font-size: 38px;
+			line-height: 1.2;
+			color: var(--color-text-inverse);
+
+			@include xl {
+				font-size: 48px;
+			}
+
+			@include xxl {
+				margin-block-end: 16px;
+				font-size: 58px;
+			}
+		}
+
+		p {
+			margin: 0;
+			color: var(--dark-12);
+		}
+	}
+
+	// .btn
+	.btn {
+		flex-shrink: 0;
+		width: 100%;
+
+		@include lg {
+			width: auto;
+		}
+	}
+}

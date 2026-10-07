@@ -1,0 +1,18 @@
+{#
+	Square social buttons with Font Awesome brand icons (webfont).
+	item.icon is the Font Awesome brand name, e.g. "instagram" -> <i class="fa-brands fa-instagram">.
+#}
+{% macro socialLinks(items, class = "", ariaLabel = "Social media") %}
+	{% set classes = ["social-links", class] | select("truthy") | join(" ") %}
+
+	<ul class="{{ classes }}" aria-label="{{ ariaLabel }}">
+		{% for item in items %}
+			<li>
+				<a href="{{ item.href }}" class="social-links__link" target="_blank" rel="noopener noreferrer">
+					<i class="fa-brands fa-{{ item.icon }}" aria-hidden="true"></i>
+					<span class="sr-only">{{ item.label }}</span>
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+{% endmacro %}

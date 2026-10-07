@@ -1,0 +1,81 @@
+{% from 'components/button.njk' import button %}
+
+{%
+	set testimonials = [
+		{
+			avatar: "/src/assets/images/img-testimonial-1.png",
+			name: "Sarah Thompson",
+			location: "New York, USA",
+			text: "StyleLoom exceeded my expectations. The gown's quality and design made me feel like a queen. Fast shipping, too!"
+		}
+		, {
+			avatar: "/src/assets/images/img-testimonial-2.png",
+			name: "Rajesh Patel",
+			location: "Mumbai, India",
+			text: "Absolutely love the style and warmth of the jacket. A perfect blend of fashion and functionality!"
+		}
+		, {
+			avatar: "/src/assets/images/img-testimonial-3.png",
+			name: "Emily Walker",
+			location: "London, UK",
+			text: "Adorable and comfortable! My daughter loves her new outfit. Thank you, StyleLoom, for dressing our little fashionista."
+		}
+		, {
+			avatar: "/src/assets/images/img-testimonial-4.png",
+			name: "Alejandro Martinez",
+			location: "Barcelona, Spain",
+			text: "Impressed by the quality and style. These shoes turned heads at every event. StyleLoom, you've gained a loyal customer!"
+		}
+		, {
+			avatar: "/src/assets/images/img-testimonial-5.png",
+			name: "Priya Sharma",
+			location: "Delhi, India",
+			text: "Perfect fit and exceptional quality. These jeans have become my go-to for casual and chic outings."
+		}
+		, {
+			avatar: "/src/assets/images/img-testimonial-6.png",
+			name: "Maria Rodriguez",
+			location: "Mexico City, Mexico",
+			text: "Stylish sneakers that don't compromise on comfort. StyleLoom knows how to balance fashion and functionality."
+		}
+	]
+%}
+
+{% macro testimonialItems(items, class = "") %}
+	{% set classes = ["testimonial__item", class] | select("truthy") | join(" ") %}
+
+	{% for item in items %}
+		<article class="{{ classes }}">
+			<header class="testimonial__author">
+				<img src="{{ item.avatar }}" alt="" loading="lazy" class="testimonial__avatar" />
+				<div class="testimonial__author-info">
+					<h3 class="testimonial__name">{{ item.name }}</h3>
+					<p class="testimonial__location">{{ item.location }}</p>
+				</div>
+				<a href="#" class="testimonial__social">
+					<img src="/src/assets/images/icon-twitter.svg" alt="" loading="lazy" />
+					<span class="sr-only">{{ item.name }} on Twitter</span>
+				</a>
+			</header>
+			<img src="/src/assets/images/icon-rating-5-stars.svg" alt="Rated 5 out of 5" loading="lazy" class="testimonial__rating" />
+			<blockquote class="testimonial__text">
+				<p>{{ item.text }}</p>
+			</blockquote>
+		</article>
+	{% endfor %}
+{% endmacro %}
+
+<section class="testimonial">
+	<div class="container">
+		<header class="testimonial__header">
+			<h2>The StyleLoom Testimonial Collection.</h2>
+			<p>At StyleLoom, our customers are the heartbeat of our brand.</p>
+		</header>
+		<div class="testimonial__grid">
+			<div class="holder">
+				{{ testimonialItems(testimonials) }}
+				{{ button(class = "", loadMore = true, text = "View All", moreText = "View All", lessText = "Hide", icon = "/src/assets/images/icon-arrow-down.svg") }}
+			</div>
+		</div>
+	</div>
+</section>

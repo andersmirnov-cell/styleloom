@@ -1,0 +1,157 @@
+// ============================================================
+// STYLELOOM — Reset & Base
+// ============================================================
+@use "../utils/mixins" as *;
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 16px;
+	scroll-behavior: smooth;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	font-family: var(--font-primary);
+	font-size: var(--text-sm);
+	font-weight: var(--font-regular);
+	line-height: var(--leading-normal);
+	color: var(--color-text-primary);
+	background-color: var(--color-bg-primary);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	min-width: var(--body-min-width, 375px);
+	margin: 0;
+
+	@include xl {
+		font-size: var(--text-base);
+	}
+
+	@include xxl {
+		font-size: var(--text-lg);
+	}
+
+	&.nav-open {
+		overflow: clip;
+		touch-action: none;
+	}
+}
+
+img,
+svg,
+video {
+	max-width: 100%;
+	height: auto;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+
+	&:not([class]) {
+		text-decoration: underline;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+}
+
+button {
+	cursor: pointer;
+	border: none;
+	background: none;
+	font: inherit;
+	color: inherit;
+}
+
+input,
+select,
+textarea {
+	font: inherit;
+	color: inherit;
+	border: none;
+	outline: none;
+	background: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: var(--font-medium);
+	line-height: var(--leading-normal);
+	margin-block: 1em;
+	color: var(--white);
+}
+
+h1,
+h2 {
+	text-transform: uppercase;
+	font-size: clamp(28px, 2.638888889vw, 48px);
+	line-height: 1.1785714286;
+	margin-block: 0 16px;
+
+	@include xl {
+		margin-block-end: 20px;
+	}
+
+	@include xxl {
+		margin-block-end: 30px;
+	}
+}
+
+h3 {
+	// font-size: 18px;
+	font-size: clamp(18px, 1.388888889vw, 24px);
+	margin-block: 0 10px;
+
+	@include xl {
+		margin-block-end: 12px;
+	}
+
+	@include xxl {
+		margin-block-end: 17px;
+	}
+}
+
+p {
+	margin-block: 0 1lh;
+
+	&:last-child {
+		margin-block-end: 0;
+	}
+}
+
+// .wrapper
+.wrapper {
+	min-height: 100svh;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+
+.container {
+	@include container;
+
+	@include lg {
+		--container-pad: 40px;
+	}
+	@include xl {
+		--container-pad: 80px;
+	}
+	@include xxl {
+		--container-pad: 130px;
+	}
+}
+
+.sr-only {
+	@include sr-only;
+}

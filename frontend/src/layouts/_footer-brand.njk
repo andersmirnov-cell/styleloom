@@ -1,0 +1,18 @@
+{% from 'components/social-links.njk' import socialLinks %}
+{%
+	set socialItems = [
+		{ icon: "instagram", label: "Instagram", href: "#" },
+		{ icon: "dribbble", label: "Dribbble", href: "#" },
+		{ icon: "twitter", label: "Twitter", href: "#" },
+		{ icon: "behance", label: "Behance", href: "#" }
+	]
+%}
+
+<div class="footer-brand">
+	<div class="container">
+		<a href="#" class="footer-brand__logo">
+			<img src="/src/assets/images/logo.svg" alt="Style.Loom" loading="lazy" />
+		</a>
+		{{ socialLinks(socialItems) }}
+	</div>
+</div>

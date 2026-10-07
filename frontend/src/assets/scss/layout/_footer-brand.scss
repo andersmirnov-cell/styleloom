@@ -1,0 +1,55 @@
+@use "../utils/mixins" as *;
+
+/* .footer-brand */
+.footer-brand {
+	border: var(--base-border-style);
+	border-width: var(--base-border-w) 0;
+	padding-block: 50px;
+
+	@include xl {
+		padding-block: 78px;
+	}
+
+	@include xxl {
+		padding-block: 96px;
+	}
+
+	.container {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 27px;
+
+		@include lg {
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			gap: 40px;
+		}
+	}
+
+	// .footer-brand__logo
+	&__logo {
+		display: block;
+		width: 100%;
+		max-width: 357px;
+
+		@include xl {
+			max-width: 630px;
+		}
+
+		@include xxl {
+			max-width: 788px;
+		}
+
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	.social-links {
+		flex-shrink: 0;
+	}
+}

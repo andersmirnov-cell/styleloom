@@ -1,0 +1,189 @@
+@use "../utils/mixins" as *;
+
+/* .footer-bottom */
+.footer-bottom {
+	font-family: var(--font-mono);
+
+	// .footer-bottom__main
+	&__main {
+		border-bottom: var(--base-border-style);
+		border-bottom-width: var(--base-border-w);
+		padding-block: 40px;
+
+		@include xl {
+			padding-block: 59px;
+		}
+
+		@include xxl {
+			padding-block: 79px;
+		}
+
+		.container {
+			display: flex;
+			flex-direction: column;
+			gap: 30px;
+
+			@include lg {
+				flex-direction: row;
+				align-items: center;
+				gap: 50px;
+			}
+
+			@include xxl {
+				gap: 60px;
+			}
+		}
+	}
+
+	// .footer-bottom__col
+	&__col {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+
+		@include lg {
+			flex: 1 1 0;
+			min-width: 0;
+		}
+
+		@include xl {
+			gap: 24px;
+		}
+
+		@include xxl {
+			gap: 30px;
+		}
+	}
+
+	// .footer-bottom__title
+	&__title {
+		margin: 0;
+		font-family: var(--font-primary);
+		font-size: var(--text-base);
+		font-weight: var(--font-medium);
+		line-height: normal;
+		color: var(--white);
+
+		@include xl {
+			font-size: var(--text-lg);
+		}
+
+		@include xxl {
+			font-size: 22px;
+		}
+	}
+
+	// .footer-bottom__menu — links separated by dots
+	&__menu {
+		--sep-gap: 10px;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 4px var(--sep-gap);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		font-size: var(--text-sm);
+		line-height: 1.5;
+
+		@include xl {
+			--sep-gap: 12px;
+			font-size: var(--text-base);
+		}
+
+		@include xxl {
+			--sep-gap: 16px;
+			font-size: var(--text-xl);
+		}
+
+		li {
+			display: flex;
+			align-items: center;
+			gap: var(--sep-gap);
+
+			&:not(:last-child)::after {
+				content: "";
+				flex-shrink: 0;
+				width: 6px;
+				aspect-ratio: 1;
+				border-radius: var(--radius-full);
+				background: var(--dark-15);
+			}
+		}
+
+		a {
+			color: var(--gray-40);
+			white-space: nowrap;
+		}
+	}
+
+	&__menu a,
+	&__legal a {
+		text-decoration: none;
+		transition: color var(--transition-base);
+
+		&:hover,
+		&:focus-visible {
+			color: var(--brown-60);
+		}
+	}
+
+	// .footer-bottom__bar
+	&__bar {
+		padding-block: 30px;
+		font-size: var(--text-sm);
+		line-height: 1.5;
+		color: var(--gray-50);
+
+		@include xl {
+			padding-block: 40px;
+		}
+
+		@include xxl {
+			padding-block: 50px;
+			font-size: var(--text-lg);
+		}
+
+		.container {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 20px;
+
+			@include md {
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+			}
+		}
+	}
+
+	// .footer-bottom__copyright
+	&__copyright {
+		margin: 0;
+	}
+
+	// .footer-bottom__legal — links separated by a vertical line
+	&__legal {
+		display: flex;
+		flex-wrap: wrap;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		li + li {
+			margin-inline-start: 10px;
+			padding-inline-start: 10px;
+			border-inline-start: 1px solid var(--dark-15);
+
+			@include xxl {
+				margin-inline-start: 11px;
+				padding-inline-start: 11px;
+			}
+		}
+
+		a {
+			color: inherit;
+		}
+	}
+}

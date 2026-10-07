@@ -1,0 +1,28 @@
+{#
+	Newsletter form — mirrors the HTML that Contact Form 7 outputs, so the same
+	styles work in WordPress. CF7 form template to use there:
+
+	<div class="newsletter-form__field">
+		<label><span class="sr-only">Your Email</span>[email* your-email autocomplete:email placeholder "Your Email"]</label>
+		[submit "Subscribe"]
+	</div>
+
+	Add html_class:newsletter-form to the [contact-form-7] shortcode.
+#}
+{% macro newsletterForm(id = "newsletter", placeholder = "Your Email", submitText = "Subscribe") %}
+	<div class="wpcf7 no-js" id="wpcf7-{{ id }}" lang="en-US" dir="ltr">
+		<form action="#" method="post" class="wpcf7-form init newsletter-form" aria-label="Newsletter subscription" novalidate="novalidate" data-status="init">
+			<div class="newsletter-form__field">
+				<label>
+					<span class="sr-only">{{ placeholder }}</span>
+					<span class="wpcf7-form-control-wrap" data-name="your-email">
+						<input type="email" name="your-email" value="" size="40" maxlength="400" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" autocomplete="email" aria-required="true" aria-invalid="false" placeholder="{{ placeholder }}" />
+					</span>
+				</label>
+				<input type="submit" value="{{ submitText }}" class="wpcf7-form-control wpcf7-submit has-spinner" />
+				<span class="wpcf7-spinner"></span>
+			</div>
+			<div class="wpcf7-response-output" aria-hidden="true"></div>
+		</form>
+	</div>
+{% endmacro %}

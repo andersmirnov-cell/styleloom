@@ -1,0 +1,219 @@
+@use "../utils/mixins" as *;
+
+/* .hero */
+.hero {
+	margin-block: 0 var(--space-y-base);
+
+	figure {
+		position: relative;
+		margin: 0;
+
+		picture {
+			display: block;
+			isolation: isolate;
+			overflow: clip;
+			border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+			position: relative;
+			background: var(--placeholder-bg);
+			aspect-ratio: 358/250;
+
+			@include md {
+				aspect-ratio: 1280/442;
+			}
+			@include xxl {
+				aspect-ratio: 1596/624;
+			}
+		}
+
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	figcaption {
+		display: flex;
+		justify-content: center;
+		position: absolute;
+		inset: 100% 0 auto;
+		margin-block-start: -37px;
+
+		@include lg {
+			margin-block-start: -40px;
+		}
+
+		@include xxl {
+			margin-block-start: -47px;
+		}
+	}
+
+	// .hero__btn-wrapper
+	&__btn-wrapper {
+		background: var(--color-bg-primary);
+		padding: 10px 10px 0;
+		border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+
+		@include lg {
+			padding: 13px 14px 0;
+			border-radius: 18px 18px 0 0;
+		}
+
+		@include xxl {
+			padding: 20px 20px 0;
+			border-radius: 20px 20px 0 0;
+		}
+
+		@supports (corner-shape: round) {
+			position: relative;
+			z-index: 1;
+
+			&::after {
+				--radius-in: 18px;
+				content: "";
+				z-index: inherit;
+				position: absolute;
+				z-index: -1;
+				inset: 19px calc(var(--radius-in) * -1) auto;
+				background-color: var(--color-bg-primary);
+				border-radius: var(--radius-in) var(--radius-in) 0 0;
+				corner-shape: scoop;
+				border: var(--radius-in) solid var(--color-bg-primary);
+				pointer-events: none;
+
+				@include lg {
+					--radius-in: 20px;
+				}
+
+				@include xxl {
+					--radius-in: 30px;
+					inset-block-start: 24px;
+				}
+			}
+		}
+	}
+
+	// .hero__text
+	&__text {
+		--offset-x: 19px;
+		--block-radius: 14px;
+		border: var(--base-border-style);
+		border-width: 0 var(--base-border-w) var(--base-border-w);
+		border-radius: 0 0 var(--block-radius) var(--block-radius);
+		padding-inline: var(--offset-x);
+		padding-block: 62px 0;
+		color: var(--gray-40);
+
+		@include lg {
+			--offset-x: 59px;
+			--block-radius: var(--radius-xl);
+			padding-block: 0;
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			column-rule: var(--base-border-style);
+			column-width: var(--base-border-w);
+		}
+
+		@include xxl {
+			--offset-x: 78px;
+			--block-radius: 20px;
+		}
+
+		header {
+			margin-block-end: 18px;
+
+			@include lg {
+				margin-block-end: 0;
+				padding-block: 58px 64px;
+				padding-inline-end: 30px;
+			}
+
+			@include xxl {
+				padding-block: 77px 83px;
+				padding-inline-end: 70px;
+			}
+		}
+
+		.menu-buttons-secondary {
+			--btn-min-height: 45px;
+			margin-inline: -8px;
+			margin-block-end: 16px;
+
+			@include lg {
+				margin-inline: 0;
+				margin-block-end: 19px;
+			}
+
+			@include xxl {
+				--btn-min-height: 55px;
+				margin-block-end: 30px;
+			}
+		}
+	}
+
+	// .hero__counter-columns
+	&__counter-columns {
+		margin-inline: calc(var(--offset-x) * -1);
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		column-rule: var(--base-border-style);
+
+		@include lg {
+			margin-inline-start: unset;
+		}
+
+		@include xxl {
+			column-rule-width: 2px;
+		}
+	}
+
+	// .hero__counter-item
+	&__counter-item {
+		border: var(--base-border-style);
+		border-width: 1px 0 0;
+		padding: 20px 30px 28px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+
+		@include xxl {
+			border-top-width: 2px;
+		}
+
+		h3 {
+			font-size: 30px;
+			line-height: 1.5;
+			margin-block: 0 -2px;
+		}
+
+		@include lg {
+			padding-inline: 49px;
+			padding-block: 38px 48px;
+
+			&:nth-child(1),
+			&:nth-child(2) {
+				padding-block: 61px 48px;
+				border-top-width: 0;
+			}
+
+			h3 {
+				font-size: 34px;
+			}
+		}
+
+		@include xxl {
+			padding-block: 44px 64px;
+
+			&:nth-child(1),
+			&:nth-child(2) {
+				padding-block: 70px 42px;
+			}
+
+			h3 {
+				font-size: 50px;
+				margin-block-end: -5px;
+			}
+		}
+	}
+}

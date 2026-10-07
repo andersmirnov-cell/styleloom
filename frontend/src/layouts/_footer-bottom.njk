@@ -1,0 +1,60 @@
+{% from 'components/newsletter-form.njk' import newsletterForm %}
+{%
+	set footerMenus = [
+		{
+			title: "Home",
+			items: [
+				{ text: "Why Us", href: "#" },
+				{ text: "About Us", href: "#" },
+				{ text: "Testimonials", href: "#" },
+				{ text: "FAQ’s", href: "#" }
+			]
+		}
+		, {
+			title: "Products",
+			items: [
+				{ text: "Menswear", href: "#" },
+				{ text: "Womenswear", href: "#" },
+				{ text: "Kidswear", href: "#" }
+			]
+		}
+	]
+%}
+{%
+	set legalItems = [
+		{ text: "Terms & Conditions", href: "#" },
+		{ text: "Privacy Policy", href: "#" }
+	]
+%}
+
+<div class="footer-bottom">
+	<div class="footer-bottom__main">
+		<div class="container">
+			{# menu markup follows wp_nav_menu(): ul > li > a, set menu_class to footer-bottom__menu #}
+			{% for menu in footerMenus %}
+				<nav class="footer-bottom__col" aria-label="{{ menu.title }}">
+					<h3 class="footer-bottom__title">{{ menu.title }}</h3>
+					<ul class="footer-bottom__menu">
+						{% for item in menu.items %}
+							<li><a href="{{ item.href }}">{{ item.text }}</a></li>
+						{% endfor %}
+					</ul>
+				</nav>
+			{% endfor %}
+			<div class="footer-bottom__col">
+				<h3 class="footer-bottom__title">Subscribe to Newsletter</h3>
+				{{ newsletterForm(id = "footer-newsletter") }}
+			</div>
+		</div>
+	</div>
+	<div class="footer-bottom__bar">
+		<div class="container">
+			<p class="footer-bottom__copyright">© 2024 StyleLoom. All rights reserved.</p>
+			<ul class="footer-bottom__legal">
+				{% for item in legalItems %}
+					<li><a href="{{ item.href }}">{{ item.text }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,154 @@
+@use "../utils/mixins" as *;
+
+/* .faq */
+.faq {
+	--base-radius: var(--radius-block-base);
+	margin-block-end: var(--space-y-base);
+
+	// .faq__header
+	&__header {
+		--block-x-padding: calc(20px - var(--base-border-w));
+		border: var(--base-border-style);
+		border-radius: var(--base-radius) var(--base-radius) 0 0;
+		border-width: var(--base-border-w) var(--base-border-w) 0;
+		padding: 29px var(--block-x-padding) 30px;
+		overflow: clip;
+
+		@include xl {
+			--base-padding: 60px;
+			padding: calc(var(--base-padding) - var(--base-border-w));
+			padding-inline-end: 250px;
+			background: url("../../images/bg-header-variant-1.svg") no-repeat right -85px bottom
+				38px / 316px auto;
+		}
+
+		@include xxl {
+			--base-padding: 80px;
+			padding-inline-end: 300px;
+			background-size: 446px auto;
+			background-position: right -165px top calc(50% - 55px);
+		}
+
+		h2 {
+			margin-block-end: 21px;
+
+			@include xl {
+				margin-block-end: 25px;
+			}
+
+			@include xxl {
+				margin-block-end: 29px;
+			}
+		}
+
+		p {
+			margin: 0;
+		}
+
+		.menu-buttons-secondary {
+			margin-block-start: 30px;
+			flex-wrap: nowrap;
+			overflow-x: auto;
+			overflow-y: clip;
+			scroll-snap-type: x mandatory;
+			padding-inline: var(--block-x-padding);
+			margin-inline: calc(var(--block-x-padding) * -1);
+			scroll-padding-inline: var(--block-x-padding);
+			@include hideScrollBar;
+
+			@include xl {
+				flex-wrap: wrap;
+				overflow: visible;
+				padding-inline: 0;
+				margin-inline: 0;
+				margin-block-start: 40px;
+			}
+
+			@include xxl {
+				margin-block-start: 50px;
+			}
+
+			li {
+				flex-shrink: 0;
+				scroll-snap-align: start;
+			}
+		}
+	}
+
+	// .faq__grid
+	&__grid {
+		overflow: clip;
+		isolation: isolate;
+		border: var(--base-border-style);
+		border-radius: 0 0 var(--base-radius) var(--base-radius);
+
+		.holder {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr);
+			margin-inline-end: calc(var(--base-border-w) * -1);
+			margin-block-end: calc(var(--base-border-w) * -1);
+			position: relative;
+
+			@include lg {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				grid-template-rows: repeat(var(--rows, 3), auto);
+				grid-auto-flow: column;
+			}
+		}
+	}
+
+	// .faq__item
+	&__item {
+		--base-padding: 30px;
+		padding: var(--base-padding);
+		padding-block-end: calc(var(--base-padding) - var(--base-border-w));
+		border: var(--base-border-style);
+		border-width: 0 var(--base-border-w) var(--base-border-w) 0;
+		transition:
+			opacity var(--transition-base),
+			width var(--transition-base),
+			height var(--transition-base);
+
+		@include xl {
+			--base-padding: 50px;
+		}
+
+		@include xxl {
+			--base-padding: 60px;
+		}
+
+		&.hidden {
+			@include md-down {
+				position: absolute;
+				width: 0;
+				height: 0;
+				opacity: 0;
+				pointer-events: none;
+				transition: unset;
+			}
+		}
+	}
+
+	// .faq__question
+	&__question {
+		margin-block-end: 12px;
+
+		@include xxl {
+			margin-block-end: 16px;
+		}
+	}
+
+	// .faq__answer
+	&__answer {
+		margin: 0;
+	}
+
+	.btn--load-more {
+		grid-column: 1 / -1;
+		border: none;
+
+		@include md {
+			display: none;
+		}
+	}
+}

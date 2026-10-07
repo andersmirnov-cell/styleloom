@@ -1,0 +1,138 @@
+@use "../utils/mixins" as *;
+
+.btn {
+	--btn-base-bg: transparent;
+	--btn-base-color: transparent;
+	--btn-base-border-color: transparent;
+	--btn-min-height: 49px;
+	--btn-border-radius: var(--radius-md);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	transition:
+		background var(--transition-base),
+		color var(--transition-base),
+		transform var(--transition-base),
+		box-shadow var(--transition-base);
+	border-radius: var(--btn-border-radius);
+	min-height: var(--btn-min-height);
+	border: 1px solid var(--btn-base-border-color);
+	padding-inline: 19px;
+	padding-block: 13px;
+	font-size: var(--text-sm);
+	line-height: 1.5;
+	text-align: center;
+	color: var(--btn-base-color);
+	background: var(--btn-base-bg);
+	cursor: pointer;
+
+	@include xxl {
+		--btn-min-height: 63px;
+		--btn-border-radius: var(--radius-lg);
+		font-size: var(--text-lg);
+		padding-inline: 23px;
+	}
+
+	&:hover {
+		background: color-mix(in srgb, var(--btn-base-bg), #fff 10%);
+	}
+
+	// .btn--primary
+	&--primary {
+		--btn-base-bg: var(--brown-60);
+		--btn-base-border-color: var(--brown-60);
+		--btn-base-color: var(--color-text-inverse);
+	}
+
+	// .btn--secondary
+	&--secondary {
+		--btn-base-bg: var(--dark-12);
+		--btn-base-border-color: var(--dark-25);
+		--btn-base-color: var(--white);
+		--s: 17px;
+		border-style: dashed;
+	}
+
+	// .btn--tertiary
+	&--tertiary {
+		--btn-base-bg: var(--brown-60);
+		--btn-base-border-color: var(--brown-60);
+		--btn-base-color: var(--color-text-inverse);
+		font-family: var(--font-mono);
+		padding-inline: 29px;
+	}
+
+	// .btn--dark
+	&--dark {
+		--btn-base-bg: var(--dark-12);
+		--btn-base-border-color: var(--dark-12);
+		--btn-base-color: var(--white);
+		gap: 2px;
+
+		@include xxl {
+			gap: 4px;
+		}
+	}
+
+	&.bordered-corners {
+		position: relative;
+
+		&::before {
+			content: "";
+			position: absolute;
+			border: 1px solid var(--brown-60);
+			inset: -1px;
+			pointer-events: none;
+			mask:
+				conic-gradient(at var(--s) var(--s), #0000 75%, #000 0) 0 0 / calc(100% - var(--s))
+					calc(100% - var(--s)),
+				conic-gradient(#000 0 0) content-box;
+			border-radius: var(--btn-border-radius);
+		}
+	}
+
+	// .btn__icon
+	&__icon {
+		display: inline-block;
+		width: 20px;
+		aspect-ratio: 1;
+		mask-repeat: no-repeat;
+		mask-position: 50% 50%;
+		mask-size: contain;
+		background: currentColor;
+
+		@include xxl {
+			width: 24px;
+		}
+	}
+
+	// .btn--icon-cart
+	&--icon-cart {
+		--btn-base-bg: var(--color-bg-secondary);
+		--btn-base-border-color: var(--color-bg-secondary);
+		--btn-base-color: var(--white);
+		padding-inline: 10px;
+		min-width: var(--btn-min-height);
+		transition: rotate var(--transition-base);
+	}
+
+	// .btn--load-more
+	&--load-more {
+		--base-space: 30px;
+		font-family: var(--font-mono);
+		font-size: var(--text-base);
+		line-height: 1.5;
+		border-radius: 0;
+		border: var(--base-border-style);
+		gap: 10px;
+		color: var(--gray-70);
+		padding: calc(var(--base-space) - var(--base-border-w));
+
+		&.opened {
+			.btn__icon {
+				rotate: (-180deg);
+			}
+		}
+	}
+}

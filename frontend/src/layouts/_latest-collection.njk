@@ -1,0 +1,97 @@
+{% from 'components/menu-buttons-secondary.njk' import menuButtonsSecondary %}
+{% from 'components/button.njk' import button %}
+{%
+	set menuItems = [
+		{ text: "All", href: "#"},
+		{ text: "Mens", href: "#" },
+		{ text: "Womens", href: "#", active: true  },
+		{ text: "Kids", href: "#" }
+	]
+%}
+{%
+	set gridItems = [
+		{
+			imageUrl: "/src/assets/images/img-latest-collection-1.png",
+			tags: ['Womenswear'],
+			title: "Timeless A-line Evening Dress",
+			fit: "Ankle-length",
+			price: "$109.99"
+		}
+		, {
+			imageUrl: "/src/assets/images/img-latest-collection-2.png",
+			tags: ['Womenswear'],
+			title: "Floral Bloom Maxi Dress",
+			fit: "Slim Fit",
+			price: "$54.99"
+		}
+		, {
+			imageUrl: "/src/assets/images/img-latest-collection-3.png",
+			tags: ['Womenswear'],
+			title: "Elegant Evening Gown",
+			fit: "Flowing skirt",
+			price: "$89.99"
+		}
+		, {
+			imageUrl: "/src/assets/images/img-latest-collection-4.png",
+			tags: ['Accessories'],
+			title: "Urban Chic Handbag",
+			fit: "Spacious",
+			price: "$49.99"
+		}
+		, {
+			imageUrl: "/src/assets/images/img-latest-collection-5.png",
+			tags: ['Accessories'],
+			title: "Sophisticate Sun Hat",
+			fit: "One size fits all",
+			price: "$24.99"
+		}
+		, {
+			imageUrl: "/src/assets/images/img-latest-collection-6.png",
+			tags: ['Womenswear'],
+			title: "Boho Chic Printed Scarf",
+			fit: "Lightweight",
+			price: "$19.99"
+		}
+	]
+%}
+
+{% macro gridItem(items, class = "") %}
+	{% set classes = ["latest-collection__item", class] | select("truthy") | join(" ") %}
+
+	{% for item in items %}
+		<article class="{{ classes }}">
+			<img src="{{ item.imageUrl }}" alt="" loading="lazy" class="latest-collection__image" />
+			<div class="latest-collection__tags">
+				{% for tag in item.tags %}
+					{{ button(text = tag, href = "#", class = "btn--secondary" ) }}
+				{% endfor %}
+			</div>
+			<div class="latest-collection__title-area">
+				<h3 class="latest-collection__title">{{ item.title }}</h3>
+				<dl class="latest-collection__meta">
+					<dt>Fit</dt>
+					<dd>{{ item.fit }}</dd>
+					<dt>Price</dt>
+					<dd>{{ item.price }}</dd>
+				</dl>
+			</div>
+			{{ button(text = "Shop Now", href = "#", class = "btn--secondary bordered-corners latest-collection__btn", icon = "/src/assets/images/icon-arrow-up-right.svg" ) }}
+		</article>
+	{% endfor %}
+{% endmacro %}
+
+<section class="latest-collection">
+	<div class="container">
+		<header class="latest-collection__header">
+			<h2>Elevate Your Style with Our Latest Collection</h2>
+			<p>Each piece is crafted to enhance your fashion statement.</p>
+			{{ menuButtonsSecondary(menuItems) }}
+		</header>
+		<div class="latest-collection__grid">
+			<div class="holder">
+				{{ gridItem(gridItems) }}
+				{{ button(class = "", loadMore = true, text = "View All", moreText = "View All", lessText = "Hide", icon = "/src/assets/images/icon-arrow-down.svg") }}
+			</div>
+		</div>
+	</div>
+</section>

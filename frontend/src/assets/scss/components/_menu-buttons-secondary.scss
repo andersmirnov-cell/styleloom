@@ -1,0 +1,62 @@
+@use "../utils/mixins" as *;
+
+.menu-buttons-secondary {
+	--btn-base-bg: transparent;
+	--btn-base-color: var(--gray-70);
+	--btn-base-border-color: var(--dark-20);
+	--btn-min-height: 49px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	font-family: var(--font-mono);
+	font-size: var(--text-sm);
+	list-style: none;
+	padding: 0;
+	margin: 0;
+
+	@include xxl {
+		--btn-min-height: 63px;
+		gap: 14px;
+		font-size: var(--text-lg);
+	}
+
+	a {
+		min-height: var(--btn-min-height);
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		border: 1px dashed var(--btn-base-border-color);
+		border-radius: var(--radius-md);
+		padding-inline: 19px;
+		padding-block: 6px;
+		background: var(--btn-base-bg);
+		color: var(--btn-base-color);
+		transition:
+			background var(--transition-base),
+			border var(--transition-base),
+			color var(--transition-base);
+		text-decoration: none;
+
+		@include xxl {
+			border-radius: var(--radius-lg);
+			padding-inline: 23px;
+		}
+	}
+
+	a:hover,
+	.active > a {
+		--btn-base-bg: var(--brown-70);
+		--btn-base-color: var(--color-text-inverse);
+		--btn-base-border-color: var(--brown-70);
+		border-style: solid;
+	}
+
+	.active > a {
+		pointer-events: none;
+		padding-inline: 23px;
+
+		@include xxl {
+			padding-inline: 29px;
+		}
+	}
+}

@@ -1,0 +1,29 @@
+{% from "components/button.njk" import button %}
+{% from "components/menu-buttons-secondary.njk" import menuButtonsSecondary %}
+
+{%
+	set menuItems = [
+		{ text: "Home", href: "#", active: true },
+		{ text: "Products", href: "#" }
+	]
+%}
+
+<header class="site-header">
+	<div class="container">
+		<div class="site-header__holder">
+			<a href="#" class="site-header__logo">
+				<img src="/src/assets/images/logo.svg" alt="Style.Loom" />
+			</a>
+			{{ button(btnMenu = true, class = "btn--primary site-header__open-menu", text = "Open mobile nav") }}
+			<nav class="site-nav">
+				{{ menuButtonsSecondary(menuItems, ariaLabel = "Main navigation") }}
+				<div class="site-nav__user-area">
+					{{ button(btnCart = true, text = "Shopping Cart", icon = "/src/assets/images/icon-cart.svg") }}
+					{{ button(class = "btn--tertiary", text = "Contact") }}
+				</div>
+			</nav>
+		</div>
+		<div class="site-header__decor site-header__decor--left"></div>
+		<div class="site-header__decor site-header__decor--right"></div>
+	</div>
+</header>

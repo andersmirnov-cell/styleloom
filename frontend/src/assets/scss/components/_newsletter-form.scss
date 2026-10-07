@@ -1,0 +1,152 @@
+@use "../utils/mixins" as *;
+
+/* .newsletter-form (Contact Form 7 markup) */
+.newsletter-form {
+	--field-radius: 7px;
+	--field-padding-y: 14px;
+	--field-padding-x: 20px;
+	--submit-size: 20px;
+	margin: 0;
+
+	@include xxl {
+		--field-radius: var(--radius-lg);
+		--field-padding-y: 18px;
+		--field-padding-x: 24px;
+		--submit-size: 24px;
+	}
+
+	// CF7 may wrap fields in <p> / add <br> (autop)
+	p {
+		margin: 0;
+	}
+
+	br {
+		display: none;
+	}
+
+	// .newsletter-form__field
+	&__field {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		position: relative;
+		padding-inline: var(--field-padding-x);
+		border-radius: var(--field-radius);
+		background: var(--color-bg-secondary);
+		transition: box-shadow var(--transition-base);
+
+		&:focus-within {
+			box-shadow: 0 0 0 1px var(--dark-25);
+		}
+
+		label,
+		.wpcf7-form-control-wrap {
+			display: block;
+			flex-grow: 1;
+			min-width: 0;
+		}
+	}
+
+	.wpcf7-email {
+		display: block;
+		width: 100%;
+		padding-block: var(--field-padding-y);
+		padding-inline: 0;
+		border: 0;
+		background: none;
+		font-family: var(--font-mono);
+		font-size: var(--text-sm);
+		line-height: 1.5;
+		color: var(--white);
+		outline: none;
+
+		@include xxl {
+			font-size: var(--text-lg);
+		}
+
+		&::placeholder {
+			color: var(--gray-40);
+			opacity: 1;
+		}
+	}
+
+	// submit is an <input>, so the arrow is its background and the value is hidden visually
+	.wpcf7-submit {
+		flex-shrink: 0;
+		width: var(--submit-size);
+		height: var(--submit-size);
+		padding: 0;
+		border: 0;
+		background: url("../../images/icon-arrow-right.svg") no-repeat 50% 50% / contain;
+		color: transparent;
+		font-size: 0;
+		cursor: pointer;
+		transition: translate var(--transition-base);
+
+		&:hover,
+		&:focus-visible {
+			translate: 3px 0;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: default;
+		}
+	}
+
+	// CF7 loading spinner — placed over the submit arrow while sending
+	.wpcf7-spinner {
+		position: absolute;
+		inset: 50% var(--field-padding-x) auto auto;
+		width: var(--submit-size);
+		height: var(--submit-size);
+		margin: calc(var(--submit-size) / -2) 0 0;
+		border: 2px solid var(--brown-60);
+		border-right-color: transparent;
+		border-radius: var(--radius-full);
+		background: var(--color-bg-secondary);
+		visibility: hidden;
+		animation: newsletter-spin 0.8s linear infinite;
+
+		&::before {
+			content: none;
+		}
+	}
+
+	&.submitting .wpcf7-spinner {
+		visibility: visible;
+	}
+
+	// CF7 validation / response messages
+	.wpcf7-not-valid-tip {
+		position: absolute;
+		inset: calc(100% + 6px) auto auto 0;
+		font-size: var(--text-xs);
+		color: var(--color-sale);
+	}
+
+	.wpcf7-response-output {
+		margin: 12px 0 0;
+		font-size: var(--text-xs);
+		color: var(--gray-50);
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	&.invalid .wpcf7-response-output,
+	&.failed .wpcf7-response-output {
+		color: var(--color-sale);
+	}
+
+	&.sent .wpcf7-response-output {
+		color: var(--brown-60);
+	}
+}
+
+@keyframes newsletter-spin {
+	to {
+		rotate: 1turn;
+	}
+}

@@ -1,0 +1,124 @@
+@use "../utils/mixins" as *;
+
+/* .journey */
+.journey {
+	margin-block-end: var(--space-y-base);
+
+	// .journey__header
+	&__header {
+		border: var(--base-border-style);
+		border-width: var(--base-border-w) var(--base-border-w) 0;
+		border-radius: var(--radius-block-base) var(--radius-block-base) 0 0;
+		padding-inline: calc(20px - var(--base-border-w));
+		padding-block: calc(30px - var(--base-border-w));
+
+		@include lg {
+			background: url("../../images/bg-header-variant-1.svg") no-repeat calc(100% + 166px)
+				77% / 361px auto;
+		}
+
+		@include xl {
+			--base-padding: 60px;
+			padding: calc(var(--base-padding) - var(--base-border-w));
+		}
+
+		@include xxl {
+			--base-padding: 80px;
+			background-size: 446px auto;
+			background-position-y: 50%;
+		}
+
+		h2 {
+			margin-block-end: 21px;
+
+			@include xl {
+				margin-block-end: 25px;
+			}
+
+			@include xxl {
+				margin-block-end: 29px;
+			}
+		}
+	}
+
+	// .journey__steps
+	&__steps {
+		overflow: clip;
+		isolation: isolate;
+		border: var(--base-border-style);
+		border-width: 0 var(--base-border-w) var(--base-border-w);
+		border-radius: 0 0 var(--radius-block-base) var(--radius-block-base);
+
+		.holder {
+			--column-count: 1;
+			display: grid;
+			grid-template-columns: repeat(var(--column-count), minmax(0, 1fr));
+			margin-inline-end: calc(var(--base-border-w) * -1);
+
+			@include lg {
+				--column-count: 2;
+				grid-template-rows: repeat(3, auto);
+			}
+
+			@include xl {
+				--column-count: 4;
+			}
+		}
+	}
+
+	// .journey__step
+	&__step {
+		--base-padding: 30px;
+		padding: var(--base-padding);
+		padding-block-start: calc(var(--base-padding) - var(--base-border-w));
+		border: var(--base-border-style);
+		border-width: var(--base-border-w) var(--base-border-w) 0 0;
+
+		@include lg {
+			display: grid;
+			grid-row: span 3;
+			grid-template-rows: subgrid;
+		}
+
+		@include xl {
+			--base-padding: 40px;
+		}
+
+		@include xxl {
+			--base-padding: 49px;
+		}
+
+		h3 {
+			font-size: 20px;
+			text-transform: capitalize;
+
+			@include xl {
+				font-size: 22px;
+			}
+
+			@include xxl {
+				font-size: 28px;
+				margin-block-end: 15px;
+			}
+		}
+	}
+
+	// .journey__step-number
+	&__step-number {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: var(--text-base);
+		line-height: var(--leading-normal);
+		margin-block-end: 20px;
+
+		@include xl {
+			font-size: 18px;
+			margin-block: 2px 24px;
+		}
+
+		@include xxl {
+			font-size: 20px;
+			margin-block: 3px 31px;
+		}
+	}
+}

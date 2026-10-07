@@ -1,0 +1,16 @@
+{% from 'components/marquee-links.njk' import marqueeLinks %}
+{%
+	set marqueeItems = [
+		{ text: "Henley Shirt", href: "#" },
+		{ text: "Tank Top", href: "#" },
+		{ text: "T-Shirt", href: "#" },
+		{ text: "Long-Sleeve T-Shirt", href: "#" },
+		{ text: "Raglan Sleeve Shirt", href: "#" },
+		{ text: "Crop Top", href: "#" },
+		{ text: "V-Neck Shirt", href: "#" },
+		{ text: "Muscle Shirt", href: "#" },
+		{ text: "Polo Dress", href: "#" }
+	]
+%}
+
+{{ marqueeLinks(marqueeItems, ariaLabel = "Shop by product") }}

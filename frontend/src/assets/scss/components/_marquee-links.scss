@@ -1,0 +1,106 @@
+@use "../utils/mixins" as *;
+
+/* .marquee-links */
+.marquee-links {
+	--marquee-gap: 12px;
+	// scroll speed in px per second; JS turns it into --marquee-duration
+	--marquee-speed: 50;
+	overflow: clip;
+	padding-block: 29px;
+	border-block: var(--base-border-style);
+	border-block-width: var(--base-border-w);
+
+	@include xl {
+		padding-block: 39px;
+	}
+
+	@include xxl {
+		--marquee-gap: 16px;
+		padding-block: 49px;
+	}
+
+	// .marquee-links__track
+	&__track {
+		display: flex;
+		width: max-content;
+	}
+
+	// animation starts once JS has cloned enough lists (see initMarqueeLinks)
+	&.is-ready &__track {
+		animation: marquee-links var(--marquee-duration, 40s) linear infinite;
+
+		@media (prefers-reduced-motion: reduce) {
+			animation-play-state: paused;
+		}
+	}
+
+	&:hover &__track,
+	&:focus-within &__track {
+		animation-play-state: paused;
+	}
+
+	// .marquee-links__list and its items
+	&__list,
+	&__list > li {
+		display: flex;
+		align-items: center;
+		gap: var(--marquee-gap);
+	}
+
+	&__list {
+		list-style: none;
+		margin: 0;
+		// spacing between the copies equals the spacing between items
+		padding: 0 var(--marquee-gap) 0 0;
+	}
+
+	// .marquee-links__link
+	&__link {
+		font-size: 20px;
+		line-height: 1.2;
+		text-transform: uppercase;
+		white-space: nowrap;
+		text-decoration: none;
+		color: var(--dark-20);
+		transition: color var(--transition-base);
+
+		@include xl {
+			font-size: 24px;
+		}
+
+		@include xxl {
+			font-size: 30px;
+		}
+
+		&:hover,
+		&:focus-visible {
+			color: var(--brown-60);
+		}
+	}
+
+	// .marquee-links__icon
+	&__icon {
+		flex-shrink: 0;
+		// fixed size so the list width is known before the lazy image loads
+		width: 40px;
+		height: auto;
+		aspect-ratio: 59.67 / 60;
+		backface-visibility: hidden;
+		pointer-events: none;
+
+		@include xl {
+			width: 50px;
+		}
+
+		@include xxl {
+			width: 60px;
+		}
+	}
+}
+
+@keyframes marquee-links {
+	to {
+		// shift by exactly one list (set by JS), then the loop restarts seamlessly
+		translate: calc(var(--marquee-shift, 50%) * -1) 0;
+	}
+}

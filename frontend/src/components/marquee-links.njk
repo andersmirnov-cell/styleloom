@@ -1,0 +1,21 @@
+{#
+	Infinite horizontal ticker of links.
+	Only one list is rendered here; initMarqueeLinks() in main.ts clones it
+	as many times as needed to cover the viewport and starts the animation.
+#}
+{% macro marqueeLinks(items, class = "", ariaLabel = "", icon = "/src/assets/images/icon-marquee-star.svg") %}
+	{% set classes = ["marquee-links", class] | select("truthy") | join(" ") %}
+
+	<nav class="{{ classes }}"{% if ariaLabel %} aria-label="{{ ariaLabel }}"{% endif %}>
+		<div class="marquee-links__track">
+			<ul class="marquee-links__list">
+				{% for item in items %}
+					<li>
+						<a href="{{ item.href }}" class="marquee-links__link">{{ item.text }}</a>
+						<img src="{{ icon }}" alt="" loading="lazy" class="marquee-links__icon" />
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</nav>
+{% endmacro %}

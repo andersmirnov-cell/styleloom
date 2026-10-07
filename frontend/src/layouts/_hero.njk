@@ -1,0 +1,58 @@
+{% from "components/button.njk" import button %}
+{% from "components/menu-buttons-secondary.njk" import menuButtonsSecondary %}
+
+{%
+	set menuItems = [
+		{ text: "All", href: "#" },
+		{ text: "Mens", href: "#" },
+		{ text: "Womens", href: "#" },
+		{ text: "Kids", href: "#" }
+	]
+%}
+
+<section class="hero">
+	<div class="container">
+		<figure>
+			<picture>
+				<source
+					srcset="/src/assets/images/img-hero-mobile@2x.png"
+					media="(max-width: {{ breakpoints.md - 1 }}px)"
+				/>
+				<img src="/src/assets/images/img-hero-desktop@2x.png" alt="" fetchpriority="high" />
+			</picture>
+			<figcaption>
+				<div class="hero__btn-wrapper">
+					{{ button(class = "btn--secondary bordered-corners", href = "#", text = "Shop Now", icon = "/src/assets/images/icon-arrow-up-right.svg") }}
+				</div>
+			</figcaption>
+		</figure>
+		<div class="hero__text">
+			<header>
+				{{ menuButtonsSecondary(menuItems, ariaLabel = "Products filter") }}
+				<h2>Elevate Your Style with StyleLoom</h2>
+				<p>
+					Explore a world of fashion at StyleLoom, where trends meet affordability.
+					Immerse yourself in the latest styles and seize exclusive promotions.
+				</p>
+			</header>
+			<div class="hero__counter-columns">
+				<div class="hero__counter-item">
+					<h3>1,500 +</h3>
+					<p>Fashion Products</p>
+				</div>
+				<div class="hero__counter-item">
+					<h3>50 +</h3>
+					<p>New arrivals every month.</p>
+				</div>
+				<div class="hero__counter-item">
+					<h3>30%</h3>
+					<p>OFF on select items.</p>
+				</div>
+				<div class="hero__counter-item">
+					<h3>95%</h3>
+					<p>Customer Satisfaction Rate</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

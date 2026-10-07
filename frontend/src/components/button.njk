@@ -1,0 +1,38 @@
+{% macro button(text, href = null, class = "", type = "button", btnMenu = false, btnCart = false, loadMore = false, moreText = "", lessText = "", icon = "") %}
+	{% set classes = ["btn", "btn--icon-cart" if btnCart, "btn--load-more" if loadMore, class] | select("truthy") | join(" ") %}
+	{% set iconUrl = "/src/assets/images/icon-cart.svg" if btnCart else icon %}
+
+
+	{% set content %}
+		{% if btnMenu %}
+			<span></span>
+			<span></span>
+			<span></span>
+			<span class="sr-only">{{ text }}</span>
+		{% elif btnCart %}
+			<span class="btn__icon" style="mask-image: url('{{ iconUrl }}')"></span>
+			<span class="sr-only">{{ text }}</span>
+		{% elif loadMore %}
+			<span class="btn__text">{{ text }}</span>
+			<span class="btn__icon" style="mask-image: url('{{ iconUrl }}')"></span>
+		{% elif iconUrl %}
+			<span>{{ text }}</span>
+			<span class="btn__icon" style="mask-image: url('{{ iconUrl }}')"></span>
+		{% else %}
+			{{ text }}
+		{% endif %}
+	{% endset %}
+
+	{% if href %}
+		<a href="{{ href }}" class="{{ classes }}">{{ content | safe }}</a>
+	{% else %}
+		<button
+			type="{{ type }}"
+			class="{{ classes }}"
+			data-text-more="{{ moreText }}"
+			data-text-less="{{ lessText }}"
+		>
+			{{ content | safe }}
+		</button>
+	{% endif %}
+{% endmacro %}

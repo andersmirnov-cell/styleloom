@@ -1,0 +1,11 @@
+{% macro menuButtonsSecondary(items, class = "", ariaLabel = "") %}
+	{% set classes = ["menu-buttons-secondary", class] | select("truthy") | join(" ") %}
+
+	<ul class="{{ classes }}"{% if ariaLabel %} aria-label="{{ ariaLabel }}"{% endif %}>
+		{% for item in items %}
+			<li{% if item.active %} class="active"{% endif %}>
+				<a href="{{ item.href }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.text }}</a>
+			</li>
+		{% endfor %}
+	</ul>
+{% endmacro %}

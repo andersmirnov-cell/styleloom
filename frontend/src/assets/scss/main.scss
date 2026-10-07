@@ -1,0 +1,30 @@
+// ============================================================
+// STYLELOOM — Main Entry Point
+// ============================================================
+
+// Utils (variables + mixins — no output, just definitions)
+@use "utils/variables";
+@use "utils/mixins" as *;
+
+// Base
+@use "base/reset";
+
+// Components
+@use "components/button";
+@use "components/menu-buttons-secondary";
+@use "components/marquee-links";
+@use "components/social-links";
+@use "components/newsletter-form";
+
+// Layout
+@use "layout/header";
+@use "layout/footer";
+@use "layout/hero";
+@use "layout/trends";
+@use "layout/journey";
+@use "layout/latest-collection";
+@use "layout/testimonial";
+@use "layout/faq";
+@use "layout/cta-banner";
+@use "layout/footer-brand";
+@use "layout/footer-bottom";

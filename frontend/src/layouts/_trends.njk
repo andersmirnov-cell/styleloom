@@ -1,0 +1,48 @@
+{% from 'components/button.njk' import button %}
+
+{% macro trendsItems(items, class = "") %}
+	{% set classes = ["trends__item", class] | select("truthy") | join(" ") %}
+
+	{% for item in items %}
+		<div
+			class="{{ classes }}"
+			{% if item.bgIcon %}style="background-image: url('{{ item.bgIcon }}')"{% endif %}
+		>
+			{% if item.icon %}
+				<figure class="trends__item-icon">
+					<div class="holder">
+						<img src="{{ item.icon }}" alt="" loading="lazy" />
+					</div>
+				</figure>
+			{% endif %}
+			{% if item.title %}<h3>{{ item.title }}</h3>{% endif %}
+			{% if item.text %}<p>{{ item.text }}</p>{% endif %}
+		</div>
+	{% endfor %}
+{% endmacro %}
+
+{%
+	set items = [
+		{ icon: "/src/assets/images/icon-trends-item-1.svg", title: "Passionaxte Craftsmanship", text: "Every garment at StyleLoom is crafted with passion, reflecting our commitment to quality and innovation.", bgIcon: "/src/assets/images/bg-trends-item-1.svg" },
+		{ icon: "/src/assets/images/icon-trends-item-2.svg", title: "Fashion Forward", text: "We're more than a brand; we're trendsetters, curating styles that empower and inspire confidence.", bgIcon: "/src/assets/images/bg-trends-item-2.svg" },
+		{ icon: "/src/assets/images/icon-trends-item-3.svg", title: "Customer-Centric Approach", text: "At StyleLoom, our customers are at the heart of everything we do. Your satisfaction is our measure of success.", bgIcon: "/src/assets/images/bg-trends-item-3.svg" },
+		{ icon: "/src/assets/images/icon-trends-item-4.svg", title: "Global Inspiration", text: "Influenced by global trends, we bring you a diverse and dynamic collection, embodying the spirit of fashion from around the world.", bgIcon: "/src/assets/images/bg-trends-item-4.svg" },
+		{ icon: "/src/assets/images/icon-trends-item-5.svg", title: "Empowering Your Style", text: "Beyond clothing, StyleLoom is a lifestyle. Join us on a journey of self-expression and empowerment through fashion.", bgIcon: "/src/assets/images/bg-trends-item-5.svg" },
+		{ icon: "/src/assets/images/icon-trends-item-6.svg", title: "Sustainable Practices", text: "StyleLoom is committed to sustainability, integrating eco-friendly practices into our production process.", bgIcon: "/src/assets/images/bg-trends-item-6.svg" }
+	]
+%}
+
+<section class="trends">
+	<div class="container">
+		<header class="trends__header">
+			<h2>Crafting Trends, Inspiring Confidence</h2>
+			<p>Explore a world of fashion at StyleLoom, where trends meet affordability.</p>
+		</header>
+		<div class="trends__grid">
+			<div class="holder">
+				{{ trendsItems(items) }}
+				{{ button(class = "", loadMore = true, text = "View All", moreText = "View All", lessText = "Hide", icon = "/src/assets/images/icon-arrow-down.svg") }}
+			</div>
+		</div>
+	</div>
+</section>
