@@ -15,10 +15,14 @@
 		<figure>
 			<picture>
 				<source
-					srcset="/src/assets/images/img-hero-mobile@2x.png"
-					media="(max-width: {{ breakpoints.md - 1 }}px)"
+					srcset="/src/assets/images/img-hero-desktop-lg.png"
+					media="(min-width: {{ breakpoints.xxl }}px)"
 				/>
-				<img src="/src/assets/images/img-hero-desktop@2x.png" alt="" fetchpriority="high" />
+				<source
+					srcset="/src/assets/images/img-hero-desktop.png"
+					media="(min-width: {{ breakpoints.md }}px)"
+				/>
+				<img src="/src/assets/images/img-hero-mobile.png" alt="Woman in sunglasses wearing a polka dot dress and a light trench coat" fetchpriority="high" />
 			</picture>
 			<figcaption>
 				<div class="hero__btn-wrapper">
@@ -29,7 +33,7 @@
 		<div class="hero__text">
 			<header>
 				{{ menuButtonsSecondary(menuItems, ariaLabel = "Products filter") }}
-				<h2>Elevate Your Style with StyleLoom</h2>
+				<h1>Elevate Your Style with StyleLoom</h1>
 				<p>
 					Explore a world of fashion at StyleLoom, where trends meet affordability.
 					Immerse yourself in the latest styles and seize exclusive promotions.
@@ -37,22 +41,19 @@
 			</header>
 			<div class="hero__counter-columns">
 				<div class="hero__counter-item">
-					<h3>1,500 +</h3>
-					<p>Fashion Products</p>
+					<h2>1,500 + <small>Fashion Products</small></h2>
 				</div>
 				<div class="hero__counter-item">
-					<h3>50 +</h3>
-					<p>New arrivals every month.</p>
+					<h2>50 + <small>New arrivals every month.</small></h2>
 				</div>
 				<div class="hero__counter-item">
-					<h3>30%</h3>
-					<p>OFF on select items.</p>
+					<h2>30% <small>OFF on select items.</small></h2>
 				</div>
 				<div class="hero__counter-item">
-					<h3>95%</h3>
-					<p>Customer Satisfaction Rate</p>
+					<h2>95% <small>Customer Satisfaction Rate</small></h2>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
+<!-- /.hero -->

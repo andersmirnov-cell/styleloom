@@ -181,10 +181,31 @@
 			border-top-width: 2px;
 		}
 
-		h3 {
+		// number + caption: <h2>1,500 + <small>Fashion Products</small></h2>
+		h2 {
 			font-size: 30px;
 			line-height: 1.5;
-			margin-block: 0 -2px;
+			text-transform: none;
+			font-variant-numeric: tabular-nums; // digits keep their width while counting
+			margin-block: 0;
+		}
+
+		small {
+			display: block;
+			margin-block-start: -2px;
+			font-size: var(--text-sm);
+			font-weight: var(--font-regular);
+			line-height: var(--leading-normal);
+			color: var(--gray-40);
+
+			@include xl {
+				font-size: var(--text-base);
+			}
+
+			@include xxl {
+				margin-block-start: -5px;
+				font-size: var(--text-lg);
+			}
 		}
 
 		@include lg {
@@ -197,7 +218,7 @@
 				border-top-width: 0;
 			}
 
-			h3 {
+			h2 {
 				font-size: 34px;
 			}
 		}
@@ -210,9 +231,8 @@
 				padding-block: 70px 42px;
 			}
 
-			h3 {
+			h2 {
 				font-size: 50px;
-				margin-block-end: -5px;
 			}
 		}
 	}

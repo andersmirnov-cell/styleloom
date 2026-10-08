@@ -94,34 +94,57 @@
 			gap: 40px;
 		}
 
-		// corner chevrons on the seam between the two rows (3-column layout only)
+		// corner chevrons on the seam between the two rows (3-column layout only):
+		// two parallel bars = top + bottom border of a skewed box
 		@include lg {
 			&:nth-child(1),
 			&:nth-child(3),
 			&:nth-child(4),
 			&:nth-child(6) {
+				--corner-w: 43px;
+				--corner-bar: 5px;
+				--corner-gap: 15px;
+				--corner-y: 34px;
+				--corner-angle: 42.5deg;
+
+				@include xxl {
+					--corner-w: 62px;
+					--corner-bar: 7px;
+					--corner-gap: 21px;
+					--corner-y: 49px;
+				}
+
 				&::after {
-					--offset: -14px;
 					content: "";
 					position: absolute;
-					width: 43px;
-					height: 52px;
-					background: url("../../images/bg-testimonial-corner.svg") no-repeat 0 0 / 100%
-						100%;
+					width: var(--corner-w);
+					height: calc(var(--corner-gap) + var(--corner-bar) * 2);
+					border-block: var(--corner-bar) solid var(--dark-12);
+					transform: skewY(calc(var(--corner-dir) * var(--corner-angle)));
 					pointer-events: none;
+				}
+			}
 
-					@include xxl {
-						--offset: -20px;
-						width: 62px;
-						height: 75px;
-					}
+			// bars run down from the left/right edge towards the row seam
+			&:nth-child(1),
+			&:nth-child(3) {
+				&::after {
+					top: calc(100% - var(--corner-y));
+				}
+			}
+
+			// mirrored: bars run up towards the row seam
+			&:nth-child(4),
+			&:nth-child(6) {
+				&::after {
+					bottom: calc(100% - var(--corner-y));
 				}
 			}
 
 			&:nth-child(1),
 			&:nth-child(4) {
 				&::after {
-					left: -5px;
+					left: 0;
 				}
 			}
 
@@ -132,23 +155,36 @@
 				}
 			}
 
-			&:nth-child(1)::after {
-				bottom: var(--offset);
+			&:nth-child(1) {
+				--corner-dir: 1;
+
+				&::after {
+					transform-origin: left top;
+				}
 			}
 
-			&:nth-child(3)::after {
-				bottom: var(--offset);
-				scale: -1 1;
+			&:nth-child(3) {
+				--corner-dir: -1;
+
+				&::after {
+					transform-origin: right top;
+				}
 			}
 
-			&:nth-child(4)::after {
-				top: var(--offset);
-				scale: 1 -1;
+			&:nth-child(4) {
+				--corner-dir: -1;
+
+				&::after {
+					transform-origin: left bottom;
+				}
 			}
 
-			&:nth-child(6)::after {
-				top: var(--offset);
-				scale: -1 -1;
+			&:nth-child(6) {
+				--corner-dir: 1;
+
+				&::after {
+					transform-origin: right bottom;
+				}
 			}
 		}
 

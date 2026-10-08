@@ -137,6 +137,17 @@
 		}
 	}
 
+	// .latest-collection__picture
+	// keeps the <img> as the grid item of the subgrid;
+	// <source> must be hidden, otherwise it takes a grid row
+	&__picture {
+		display: contents;
+
+		source {
+			display: none;
+		}
+	}
+
 	// .latest-collection__image
 	&__image {
 		aspect-ratio: 318/220;

@@ -47,7 +47,7 @@
 	{% for item in items %}
 		<article class="{{ classes }}">
 			<header class="testimonial__author">
-				<img src="{{ item.avatar }}" alt="" loading="lazy" class="testimonial__avatar" />
+				<img src="{{ item.avatar }}" alt="Photo of {{ item.name }}" loading="lazy" class="testimonial__avatar" />
 				<div class="testimonial__author-info">
 					<h3 class="testimonial__name">{{ item.name }}</h3>
 					<p class="testimonial__location">{{ item.location }}</p>
@@ -79,3 +79,4 @@
 		</div>
 	</div>
 </section>
+<!-- /.testimonial -->

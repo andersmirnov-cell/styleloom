@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	initGridMobile('.testimonial__grid', '.testimonial__item');
 	initGridMobile('.faq__grid', '.faq__item');
 	initMarqueeLinks('.marquee-links');
+	initCounters('.hero__counter-item h2');
 });
 
 // finctions
@@ -85,8 +86,6 @@ function initGridMobile(parentEl: string, childEl: string) {
 		const gridItems = parentEl.querySelectorAll<HTMLElement>(childEl);
 
 		if (!gridItems.length) return;
-
-		console.log(typeof gridItems);
 
 		if (gridItems.length > 3) {
 			let isOpened = false;
@@ -182,4 +181,75 @@ function initMarqueeLinks(selector: string) {
 		observer.observe(marquee);
 		observer.observe(baseList);
 	});
+}
+
+// counts the number in the element's first text node up from 0 when the element
+// scrolls into view; the rest of the text ("+", "%", <small>) stays as it is
+function initCounters(selector: string, duration = 1500) {
+	const counters = document.querySelectorAll<HTMLElement>(selector);
+
+	if (!counters.length) return;
+
+	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+	const items = [...counters].flatMap((counter) => {
+		const textNode = [...counter.childNodes].find(
+			(node): node is Text => node instanceof Text && /\d/.test(node.data)
+		);
+		const match = textNode?.data.match(/\d[\d,]*(\.\d+)?/);
+
+		if (!textNode || !match) return [];
+
+		const original = textNode.data;
+		const [before, after] = [
+			original.slice(0, match.index),
+			original.slice(match.index! + match[0].length),
+		];
+		const target = parseFloat(match[0].replace(/,/g, ''));
+		const formatter = new Intl.NumberFormat('en-US', {
+			useGrouping: match[0].includes(','),
+			minimumFractionDigits: match[1] ? match[1].length - 1 : 0,
+			maximumFractionDigits: match[1] ? match[1].length - 1 : 0,
+		});
+		const render = (value: number) => {
+			textNode.data = before + formatter.format(value) + after;
+		};
+
+		render(0);
+
+		return [{ counter, original, target, render, textNode }];
+	});
+
+	const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) return;
+
+				observer.unobserve(entry.target);
+
+				const item = items.find(({ counter }) => counter === entry.target);
+
+				if (!item) return;
+
+				const start = performance.now();
+
+				function tick(now: number) {
+					const progress = Math.min((now - start) / duration, 1);
+					const eased = 1 - (1 - progress) ** 3; // ease-out cubic
+
+					if (progress < 1) {
+						item!.render(item!.target * eased);
+						requestAnimationFrame(tick);
+					} else {
+						item!.textNode.data = item!.original;
+					}
+				}
+
+				requestAnimationFrame(tick);
+			});
+		},
+		{ threshold: 0.6 }
+	);
+
+	items.forEach(({ counter }) => observer.observe(counter));
 }

@@ -9,14 +9,12 @@
 	<body>
 		<div class="wrapper">
 			{% include "./_header.njk" %}
-			{# /.site-header #}
 			<main>
 				{% block main %}
 				{% endblock %}
 			</main>
-			{# /.site-main #}
+			<!-- /.site-main -->
 			{% include "./_footer.njk" %}
-			{# /.site-footer #}
 		</div>
 		<script type="module" src="/src/assets/js/main.ts"></script>
 	</body>
