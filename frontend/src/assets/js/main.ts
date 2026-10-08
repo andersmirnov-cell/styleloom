@@ -30,6 +30,14 @@ function openMobileNav() {
 		e.preventDefault();
 		document.body.classList.toggle('nav-open');
 	});
+
+	// close by Esc and return focus to the menu button
+	document.addEventListener('keydown', (e) => {
+		if (e.key !== 'Escape' || !document.body.classList.contains('nav-open')) return;
+
+		document.body.classList.remove('nav-open');
+		btn.focus();
+	});
 }
 
 function setHeaderHeightVariable() {
