@@ -102,16 +102,15 @@
 			&:nth-child(4),
 			&:nth-child(6) {
 				--corner-w: 43px;
-				--corner-bar: 5px;
-				--corner-gap: 15px;
-				--corner-y: 34px;
+				--corner-bar: 4px;
+				--corner-gap: 7px;
+				--corner-y: 33px;
 				--corner-angle: 42.5deg;
 
 				@include xxl {
 					--corner-w: 62px;
-					--corner-bar: 7px;
-					--corner-gap: 21px;
-					--corner-y: 49px;
+					--corner-bar: 8px;
+					--corner-y: 50px;
 				}
 
 				&::after {

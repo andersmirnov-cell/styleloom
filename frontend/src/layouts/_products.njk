@@ -1,0 +1,61 @@
+{% from 'components/menu-buttons-secondary.njk' import menuButtonsSecondary %}
+{% from 'components/button.njk' import button %}
+{% from 'components/product-card.njk' import productCard %}
+{% from 'data/products.njk' import products %}
+{%
+	set menuItems = [
+		{ text: "All", href: "#"},
+		{ text: "Mens", href: "#" },
+		{ text: "Womens", href: "#", active: true  },
+		{ text: "Kids", href: "#" }
+	]
+%}
+{%
+	set categories = [
+		{
+			title: "Dress Collection",
+			href: "#",
+			items: [products.aLineDress, products.maxiDress, products.eveningGown]
+		}
+		, {
+			title: "Accessories",
+			href: "#",
+			items: [products.bucketHat, products.sunHat, products.fedora]
+		}
+		, {
+			title: "Bags and HandBags",
+			href: "#",
+			tags: ['Hand Bag'],
+			items: [products.backpack, products.clutch, products.urbanHandbag]
+		}
+	]
+%}
+
+<section class="latest-collection latest-collection--products">
+	<div class="container">
+		<header class="latest-collection__header">
+			<h1>Explore the Latest Trends and Timeless Classics</h1>
+			<p>Dive into the world of fashion excellence at StyleLoom. Our curated selection brings together the latest trends and timeless classics</p>
+			{{ menuButtonsSecondary(menuItems) }}
+		</header>
+		<div class="latest-collection__categories">
+			{% for category in categories %}
+				<section class="latest-collection__category">
+					<header class="latest-collection__category-header">
+						<h2 class="latest-collection__category-title">{{ category.title }}</h2>
+						{{ button(text = "View All", href = category.href, class = "btn--secondary bordered-corners latest-collection__category-link", icon = "/src/assets/images/icon-arrow-up-right.svg") }}
+					</header>
+					<div class="latest-collection__grid" data-visible-items="1">
+						<div class="holder">
+							{% for item in category.items %}
+								{{ productCard(item, tags = category.tags) }}
+							{% endfor %}
+							{{ button(class = "", loadMore = true, text = "View All", moreText = "View All", lessText = "Hide", icon = "/src/assets/images/icon-arrow-down.svg") }}
+						</div>
+					</div>
+				</section>
+			{% endfor %}
+		</div>
+	</div>
+</section>
+<!-- /.latest-collection--products -->

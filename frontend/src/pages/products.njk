@@ -1,0 +1,10 @@
+{% extends "layouts/base.njk" %}
+{% set pagetitle = "Products" %}
+{% set currentPage = "products" %}
+
+{% block main %}
+	{% include "layouts/_products.njk" %}
+	{% include "layouts/_testimonial.njk" %}
+	{% include "layouts/_faq.njk" %}
+	{% include "layouts/_cta-banner.njk" %}
+{% endblock %}

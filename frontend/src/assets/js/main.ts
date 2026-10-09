@@ -92,10 +92,12 @@ function initGridMobile(parentEl: string, childEl: string) {
 
 	gridParent.forEach((parentEl) => {
 		const gridItems = parentEl.querySelectorAll<HTMLElement>(childEl);
+		// number of items shown before "View All", set per grid via data-visible-items
+		const visibleCount = Number(parentEl.dataset.visibleItems) || 3;
 
 		if (!gridItems.length) return;
 
-		if (gridItems.length > 3) {
+		if (gridItems.length > visibleCount) {
 			let isOpened = false;
 			const btnOpen = parentEl.querySelector<HTMLButtonElement | HTMLLinkElement>(
 				'.btn--load-more'
@@ -103,7 +105,7 @@ function initGridMobile(parentEl: string, childEl: string) {
 
 			if (!btnOpen) return;
 
-			switchClass(gridItems, true);
+			switchClass(gridItems, visibleCount, true);
 
 			btnOpen.addEventListener('click', (e) => {
 				e.preventDefault();
@@ -116,18 +118,18 @@ function initGridMobile(parentEl: string, childEl: string) {
 
 				if (isOpened) {
 					textHolder.textContent = btnOpen.dataset.textLess ?? 'Show Less';
-					switchClass(gridItems, false);
+					switchClass(gridItems, visibleCount, false);
 					return;
 				}
 				textHolder.textContent = btnOpen.dataset.textMore ?? 'View All';
-				switchClass(gridItems, true);
+				switchClass(gridItems, visibleCount, true);
 			});
 		}
 	});
 
-	function switchClass(items: NodeListOf<HTMLElement>, add: boolean) {
+	function switchClass(items: NodeListOf<HTMLElement>, visibleCount: number, add: boolean) {
 		items.forEach((item, i) => {
-			if (i > 2) {
+			if (i >= visibleCount) {
 				item.classList.toggle('hidden', add);
 			}
 		});

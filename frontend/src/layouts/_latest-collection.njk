@@ -1,5 +1,7 @@
 {% from 'components/menu-buttons-secondary.njk' import menuButtonsSecondary %}
 {% from 'components/button.njk' import button %}
+{% from 'components/product-card.njk' import productCard %}
+{% from 'data/products.njk' import products %}
 {%
 	set menuItems = [
 		{ text: "All", href: "#"},
@@ -10,103 +12,14 @@
 %}
 {%
 	set gridItems = [
-		{
-			imageUrl: "/src/assets/images/img-latest-collection-1.png",
-			imageUrlDesktop: "/src/assets/images/img-latest-collection-desktop-1.png",
-			imageUrlDesktopLg: "/src/assets/images/img-latest-collection-desktop-lg-1.png",
-			imageAlt: "Model in a white long-sleeve wrap top",
-			tags: ['Womenswear'],
-			title: "Timeless A-line Evening Dress",
-			fit: "Ankle-length",
-			price: "$109.99"
-		}
-		, {
-			imageUrl: "/src/assets/images/img-latest-collection-2.png",
-			imageUrlDesktop: "/src/assets/images/img-latest-collection-desktop-2.png",
-			imageUrlDesktopLg: "/src/assets/images/img-latest-collection-desktop-lg-2.png",
-			imageAlt: "Model in a light pink oversized blazer",
-			tags: ['Womenswear'],
-			title: "Floral Bloom Maxi Dress",
-			fit: "Slim Fit",
-			price: "$54.99"
-		}
-		, {
-			imageUrl: "/src/assets/images/img-latest-collection-3.png",
-			imageUrlDesktop: "/src/assets/images/img-latest-collection-desktop-3.png",
-			imageUrlDesktopLg: "/src/assets/images/img-latest-collection-desktop-lg-3.png",
-			imageAlt: "Model in a belted brown leather trench coat",
-			tags: ['Womenswear'],
-			title: "Elegant Evening Gown",
-			fit: "Flowing skirt",
-			price: "$89.99"
-		}
-		, {
-			imageUrl: "/src/assets/images/img-latest-collection-4.png",
-			imageUrlDesktop: "/src/assets/images/img-latest-collection-desktop-4.png",
-			imageUrlDesktopLg: "/src/assets/images/img-latest-collection-desktop-lg-4.png",
-			imageAlt: "Handbags and heeled shoes laid out on a beige background",
-			tags: ['Accessories'],
-			title: "Urban Chic Handbag",
-			fit: "Spacious",
-			price: "$49.99"
-		}
-		, {
-			imageUrl: "/src/assets/images/img-latest-collection-5.png",
-			imageUrlDesktop: "/src/assets/images/img-latest-collection-desktop-5.png",
-			imageUrlDesktopLg: "/src/assets/images/img-latest-collection-desktop-lg-5.png",
-			imageAlt: "Straw sun hat and sunglasses on a striped blanket",
-			tags: ['Accessories'],
-			title: "Sophisticate Sun Hat",
-			fit: "One size fits all",
-			price: "$24.99"
-		}
-		, {
-			imageUrl: "/src/assets/images/img-latest-collection-6.png",
-			imageUrlDesktop: "/src/assets/images/img-latest-collection-desktop-6.png",
-			imageUrlDesktopLg: "/src/assets/images/img-latest-collection-desktop-lg-6.png",
-			imageAlt: "Model in a belted rust-colored trench coat",
-			tags: ['Womenswear'],
-			title: "Boho Chic Printed Scarf",
-			fit: "Lightweight",
-			price: "$19.99"
-		}
+		products.aLineDress,
+		products.maxiDress,
+		products.eveningGown,
+		products.urbanHandbag,
+		products.sunHat,
+		products.printedScarf
 	]
 %}
-
-{% macro gridItem(items, class = "") %}
-	{% set classes = ["latest-collection__item", class] | select("truthy") | join(" ") %}
-
-	{% for item in items %}
-		<article class="{{ classes }}">
-			<picture class="latest-collection__picture">
-				<source
-					srcset="{{ item.imageUrlDesktopLg }}"
-					media="(min-width: {{ breakpoints.xxl }}px)"
-				/>
-				<source
-					srcset="{{ item.imageUrlDesktop }}"
-					media="(min-width: {{ breakpoints.md }}px)"
-				/>
-				<img src="{{ item.imageUrl }}" alt="{{ item.imageAlt }}" loading="lazy" class="latest-collection__image" />
-			</picture>
-			<div class="latest-collection__tags">
-				{% for tag in item.tags %}
-					{{ button(text = tag, href = "#", class = "btn--secondary" ) }}
-				{% endfor %}
-			</div>
-			<div class="latest-collection__title-area">
-				<h3 class="latest-collection__title">{{ item.title }}</h3>
-				<dl class="latest-collection__meta">
-					<dt>Fit</dt>
-					<dd>{{ item.fit }}</dd>
-					<dt>Price</dt>
-					<dd>{{ item.price }}</dd>
-				</dl>
-			</div>
-			{{ button(text = "Shop Now", href = "#", class = "btn--secondary bordered-corners latest-collection__btn", icon = "/src/assets/images/icon-arrow-up-right.svg" ) }}
-		</article>
-	{% endfor %}
-{% endmacro %}
 
 <section class="latest-collection">
 	<div class="container">
@@ -117,7 +30,9 @@
 		</header>
 		<div class="latest-collection__grid">
 			<div class="holder">
-				{{ gridItem(gridItems) }}
+				{% for item in gridItems %}
+					{{ productCard(item) }}
+				{% endfor %}
 				{{ button(class = "", loadMore = true, text = "View All", moreText = "View All", lessText = "Hide", icon = "/src/assets/images/icon-arrow-down.svg") }}
 			</div>
 		</div>

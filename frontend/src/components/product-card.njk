@@ -1,0 +1,35 @@
+{% from 'components/button.njk' import button %}
+
+{# tags overrides item.tags, e.g. the same product listed under another category #}
+{% macro productCard(item, class = "", tags = null) %}
+	{% set classes = ["latest-collection__item", class] | select("truthy") | join(" ") %}
+
+	<article class="{{ classes }}">
+		<picture class="latest-collection__picture">
+			<source
+				srcset="{{ item.imageUrlDesktopLg }}"
+				media="(min-width: {{ breakpoints.xxl }}px)"
+			/>
+			<source
+				srcset="{{ item.imageUrlDesktop }}"
+				media="(min-width: {{ breakpoints.md }}px)"
+			/>
+			<img src="{{ item.imageUrl }}" alt="{{ item.imageAlt }}" loading="lazy" class="latest-collection__image" />
+		</picture>
+		<div class="latest-collection__tags">
+			{% for tag in (tags or item.tags) %}
+				{{ button(text = tag, href = "#", class = "btn--secondary" ) }}
+			{% endfor %}
+		</div>
+		<div class="latest-collection__title-area">
+			<h3 class="latest-collection__title">{{ item.title }}</h3>
+			<dl class="latest-collection__meta">
+				<dt>Fit</dt>
+				<dd>{{ item.fit }}</dd>
+				<dt>Price</dt>
+				<dd>{{ item.price }}</dd>
+			</dl>
+		</div>
+		{{ button(text = "Shop Now", href = "#", class = "btn--secondary bordered-corners latest-collection__btn", icon = "/src/assets/images/icon-arrow-up-right.svg" ) }}
+	</article>
+{% endmacro %}
