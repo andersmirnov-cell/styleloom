@@ -63,6 +63,20 @@
 		padding-inline: 29px;
 	}
 
+	// .btn--light
+	&--light {
+		--btn-base-bg: var(--brown-70);
+		--btn-base-border-color: var(--brown-70);
+		--btn-base-color: var(--color-text-inverse);
+		font-family: var(--font-mono);
+		gap: 6px;
+
+		@include xxl {
+			gap: 10px;
+			padding-inline: 29px;
+		}
+	}
+
 	// .btn--dark
 	&--dark {
 		--btn-base-bg: var(--dark-12);
@@ -104,6 +118,13 @@
 
 		@include xxl {
 			width: 24px;
+		}
+	}
+
+	// .btn--icon-start: icon before the text
+	&--icon-start {
+		.btn__icon {
+			order: -1;
 		}
 	}
 

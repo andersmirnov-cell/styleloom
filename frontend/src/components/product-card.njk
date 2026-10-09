@@ -30,6 +30,6 @@
 				<dd>{{ item.price }}</dd>
 			</dl>
 		</div>
-		{{ button(text = "Shop Now", href = "#", class = "btn--secondary bordered-corners latest-collection__btn", icon = "/src/assets/images/icon-arrow-up-right.svg" ) }}
+		{{ button(text = "Shop Now", href = item.href or "#", class = "btn--secondary bordered-corners latest-collection__btn", icon = "/src/assets/images/icon-arrow-up-right.svg" ) }}
 	</article>
 {% endmacro %}

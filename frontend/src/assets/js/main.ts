@@ -1,8 +1,6 @@
 // Font Awesome as a webfont: core styles + brand icons only (<i class="fa-brands fa-…">)
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 import '@fortawesome/fontawesome-free/css/brands.min.css';
-import '@fontsource-variable/roboto/wght.css';
-import '@fontsource-variable/roboto-mono/wght.css';
 import '../scss/main.scss';
 
 import { breakpoints } from './breakpoints';

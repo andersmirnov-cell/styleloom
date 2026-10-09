@@ -310,6 +310,7 @@
 		display: block;
 		width: 116px;
 		height: auto;
+		pointer-events: none;
 
 		@include xxl {
 			width: 140px;

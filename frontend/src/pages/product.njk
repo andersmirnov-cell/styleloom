@@ -1,0 +1,10 @@
+{% extends "layouts/base.njk" %}
+{% set pagetitle = "Elegant Evening Gown" %}
+{% set currentPage = "products" %}
+
+{% block main %}
+	{% include "layouts/_product-detail.njk" %}
+	{% include "layouts/_testimonial.njk" %}
+	{% include "layouts/_faq.njk" %}
+	{% include "layouts/_cta-banner.njk" %}
+{% endblock %}

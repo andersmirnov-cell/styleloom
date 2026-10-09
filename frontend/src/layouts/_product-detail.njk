@@ -1,0 +1,131 @@
+{% from 'components/button.njk' import button %}
+{%
+	set product = {
+		title: "Elegant Evening Gown",
+		subtitle: "Fitted bodice, flowing skirt",
+		price: "$89.99",
+		gallery: [
+			{ src: "/src/assets/images/img-product-detail-1.png", alt: "Model in a beige satin blazer over a fitted gown" },
+			{ src: "/src/assets/images/img-product-detail-2.png", alt: "Model posing with a hand in her hair, blazer open over the gown" },
+			{ src: "/src/assets/images/img-product-detail-3.png", alt: "Model in the gown with the blazer draped over one shoulder" }
+		],
+		features: [
+			"Distressed detailing for a rugged look",
+			"Button-up front closure with engraved metal buttons",
+			"Two chest pockets with buttoned flaps",
+			"Two side pockets for added functionality",
+			"Adjustable buttoned cuffs for a personalized fit",
+			"Back waist tabs for customizable styling"
+		],
+		sizes: ["S", "M", "L", "XL"],
+		rating: "4.8",
+		ratingsCount: 49,
+		ratingBars: [
+			{ stars: 5, value: 100 },
+			{ stars: 4, value: 92 },
+			{ stars: 3, value: 75 },
+			{ stars: 2, value: 56 },
+			{ stars: 1, value: 36 }
+		]
+	}
+%}
+
+<section class="product-detail">
+	<div class="container">
+		<div class="product-detail__holder">
+			<header class="product-detail__header">
+				<div class="product-detail__heading">
+					<h1>{{ product.title }}</h1>
+					<div class="product-detail__meta">
+						<p class="product-detail__subtitle">{{ product.subtitle }}</p>
+						<span class="product-detail__badge">In stock</span>
+					</div>
+				</div>
+				<div class="product-detail__actions">
+					{{ button(text = "Add To Cart", class = "btn--secondary btn--icon-start bordered-corners", icon = "/src/assets/images/icon-cart.svg") }}
+					{{ button(text = "Shop Now", href = "#", class = "btn--light btn--icon-start", icon = "/src/assets/images/icon-bag.svg") }}
+				</div>
+			</header>
+
+			<div class="product-detail__gallery">
+				<div class="product-detail__gallery-main">
+					<img src="{{ product.gallery[0].src }}" alt="{{ product.gallery[0].alt }}" class="product-detail__image" />
+				</div>
+				<div class="product-detail__gallery-side">
+					{% for image in product.gallery.slice(1) %}
+						<img src="{{ image.src }}" alt="{{ image.alt }}" loading="lazy" class="product-detail__image" />
+					{% endfor %}
+				</div>
+			</div>
+
+			<div class="product-detail__info">
+				<div class="product-detail__col">
+					<div class="product-detail__row">
+						<h2 class="product-detail__title">Materials, Care and origin</h2>
+					</div>
+					<div class="product-detail__row">
+						<h3>Join Life</h3>
+						<p>Tracing its roots back to ancient Greek draped garments, has evolved through centuries, often crafted from luxurious fabrics like silks, satins, and velvets.</p>
+					</div>
+					<div class="product-detail__row product-detail__row--materials">
+						<div>
+							<h3>Materials</h3>
+							<p>Flowing from Grecian folds to glittering silks, the evening gown has graced centuries in luxury.</p>
+						</div>
+						<img src="/src/assets/images/img-product-detail-material.png" alt="Close-up of the beige woven fabric" loading="lazy" class="product-detail__material" />
+					</div>
+				</div>
+
+				<div class="product-detail__col">
+					<div class="product-detail__row product-detail__row--features">
+						<h2 class="product-detail__title">Features</h2>
+						<ul class="product-detail__features">
+							{% for feature in product.features %}
+								<li>{{ feature }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					<div class="product-detail__row product-detail__row--price">
+						<h3>Price</h3>
+						<div class="product-detail__price-area">
+							<p class="product-detail__price">
+								<strong>{{ product.price }}</strong>
+								<span>( MRP incl. of all taxes )</span>
+							</p>
+							{{ button(text = "Add To Cart", class = "btn--secondary btn--icon-start bordered-corners", icon = "/src/assets/images/icon-cart.svg") }}
+						</div>
+					</div>
+					<div class="product-detail__row product-detail__row--sizes">
+						<h3>Available Sizes</h3>
+						<ul class="product-detail__sizes">
+							{% for size in product.sizes %}
+								<li>{{ size }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					<div class="product-detail__row">
+						<h3 class="product-detail__rating-title">Ratings &amp; Review</h3>
+					</div>
+					<div class="product-detail__row product-detail__rating">
+						<div class="product-detail__rating-summary">
+							<p class="product-detail__rating-value">{{ product.rating }}</p>
+							<img src="/src/assets/images/icon-rating-5-stars.svg" alt="Rated {{ product.rating }} out of 5" loading="lazy" class="product-detail__rating-stars" />
+							<p class="product-detail__rating-count">{{ product.ratingsCount }} Ratings</p>
+						</div>
+						<ul class="product-detail__rating-bars">
+							{% for bar in product.ratingBars %}
+								<li>
+									<img src="/src/assets/images/icon-star.svg" alt="" loading="lazy" class="product-detail__rating-star" />
+									<span aria-hidden="true">0{{ bar.stars }}</span>
+									<span class="product-detail__rating-bar" style="--value: {{ bar.value }}%"></span>
+									<span class="sr-only">{{ bar.stars }} stars: {{ bar.value }}% of ratings</span>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- /.product-detail -->

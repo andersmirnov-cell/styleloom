@@ -29,8 +29,8 @@
 		<button
 			type="{{ type }}"
 			class="{{ classes }}"
-			data-text-more="{{ moreText }}"
-			data-text-less="{{ lessText }}"
+			{% if moreText %}data-text-more="{{ moreText }}"{% endif %}
+			{% if lessText %}data-text-less="{{ lessText }}"{% endif %}
 		>
 			{{ content | safe }}
 		</button>

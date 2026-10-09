@@ -7,6 +7,7 @@
 @use "utils/mixins" as *;
 
 // Base
+@use "base/fonts";
 @use "base/reset";
 
 // Components
@@ -23,6 +24,7 @@
 @use "layout/trends";
 @use "layout/journey";
 @use "layout/latest-collection";
+@use "layout/product-detail";
 @use "layout/testimonial";
 @use "layout/faq";
 @use "layout/cta-banner";

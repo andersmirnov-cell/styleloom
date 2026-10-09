@@ -52,7 +52,7 @@
 	}
 
 	.active > a {
-		pointer-events: none;
+		// pointer-events: none;
 		padding-inline: 23px;
 
 		@include xxl {

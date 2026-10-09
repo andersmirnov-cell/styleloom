@@ -372,12 +372,20 @@
 				padding-inline-end: 20%;
 			}
 
+			@include xxl {
+				background-position-x: calc(100% + 148px);
+			}
+
 			h1,
 			h2 {
 				margin-block-end: 20px;
 
 				@include lg {
 					margin-block-end: 25px;
+				}
+
+				@include xxl {
+					margin-block-end: 30px;
 				}
 			}
 		}
