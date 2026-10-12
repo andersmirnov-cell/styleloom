@@ -14,9 +14,23 @@ styleloom/
 
 ## Frontend
 
-A pixel-accurate implementation of an e-commerce homepage for desktop, tablet and mobile. The markup is split into layouts, partials and components, so it can be moved into WordPress templates with minimal changes.
+A pixel-accurate implementation of an e-commerce store for desktop, tablet and mobile. The markup is split into layouts, partials and reusable components, so it can be moved into WordPress templates with minimal changes.
 
-**Sections:** header with mobile menu, hero, stats, features, shopping journey, latest collection, testimonials, FAQ, call-to-action banner, footer.
+### Pages
+
+- **Home** (`index.html`) — header with mobile menu, hero, stats, features, shopping journey, latest collection, testimonials, FAQ, call-to-action banner, footer.
+- **Products** (`products.html`) — category filter tabs (All / Mens / Womens / Kids) and product grids grouped by category (dresses, accessories, bags), each with a "View All" link and a "load more" toggle on mobile.
+- **Product details** (`product.html`) — image gallery, stock badge, materials and care, features list, price, available sizes, ratings breakdown.
+- **Contact** (`contact.html`) — contact cards (email, phone, location), return policy and cancellation policy blocks.
+
+Products, Product details and Contact pages share the testimonials, FAQ and call-to-action sections with the homepage.
+
+### Reusable parts
+
+- `data/products.njk` — shared product data used by both the homepage collection and the products page
+- `components/product-card.njk` — product card rendered from the shared data
+- `components/policy.njk` — policy block driven by a config object (title, link, items)
+- `components/icon-circle.njk`, `components/button.njk` and other UI components
 
 ### Tech stack
 
@@ -24,7 +38,7 @@ A pixel-accurate implementation of an e-commerce homepage for desktop, tablet an
 - **Nunjucks** — templates, layouts and partials
 - **SCSS** — modular architecture with design tokens (CSS custom properties)
 - **CSS Grid & Flexbox** — mobile-first responsive layouts
-- **TypeScript** — mobile menu and UI interactions
+- **TypeScript** — mobile menu, mobile grid "load more", marquee, animated counters
 
 ### Features
 
@@ -56,9 +70,9 @@ Development: Andrii Smyrnov.
 ## Roadmap
 
 - [x] Responsive homepage (frontend)
-- [ ] Responsive products page (frontend)
-- [ ] Responsive product details page (frontend)
-- [ ] Responsive contact page (frontend)
+- [x] Responsive products page (frontend)
+- [x] Responsive product details page (frontend)
+- [x] Responsive contact page (frontend)
 - [ ] WordPress / WooCommerce theme (backend)
 - [ ] Product category filtering via WooCommerce
 - [ ] Catalog, product, cart and checkout templates
