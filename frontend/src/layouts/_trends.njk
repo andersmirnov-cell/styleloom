@@ -1,4 +1,5 @@
 {% from 'components/button.njk' import button %}
+{% from 'components/icon-circle.njk' import iconCircle %}
 
 {% macro trendsItems(items, class = "") %}
 	{% set classes = ["trends__item", class] | select("truthy") | join(" ") %}
@@ -9,11 +10,7 @@
 			{% if item.bgIcon %}style="background-image: url('{{ item.bgIcon }}')"{% endif %}
 		>
 			{% if item.icon %}
-				<figure class="trends__item-icon">
-					<div class="holder">
-						<img src="{{ item.icon }}" alt="" loading="lazy" />
-					</div>
-				</figure>
+				{{ iconCircle(item.icon, class = "trends__item-icon") }}
 			{% endif %}
 			{% if item.title %}<h3>{{ item.title }}</h3>{% endif %}
 			{% if item.text %}<p>{{ item.text }}</p>{% endif %}

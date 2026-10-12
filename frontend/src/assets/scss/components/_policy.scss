@@ -1,0 +1,110 @@
+@use "../utils/mixins" as *;
+
+/* .policy */
+.policy {
+	margin-block-end: var(--space-y-base);
+
+	// .policy__holder
+	&__holder {
+		border: var(--base-border-style);
+		border-width: var(--base-border-w);
+		border-radius: var(--radius-block-base);
+		overflow: clip;
+	}
+
+	// .policy__header
+	&__header {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		padding: 30px;
+
+		@include md {
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		@include xl {
+			padding: 50px;
+		}
+
+		h2 {
+			margin: 0;
+			font-size: var(--text-xl);
+			line-height: 1.171875;
+
+			@include xl {
+				font-size: var(--text-2xl);
+			}
+
+			@include xxl {
+				font-size: 30px;
+			}
+		}
+
+		.btn {
+			flex-shrink: 0;
+		}
+	}
+
+	// .policy__grid
+	&__grid {
+		border-block-start: var(--base-border-style);
+		border-block-start-width: var(--base-border-w);
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		column-gap: var(--base-border-w);
+		column-rule: var(--base-border-style);
+		column-rule-width: var(--base-border-w);
+	}
+
+	// .policy__item
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+		padding: 38px 20px;
+
+		@include xl-down {
+			&:not(:last-child) {
+				border-block-end: var(--base-border-style);
+				border-block-end-width: var(--base-border-w);
+			}
+		}
+
+		@include md {
+			padding-inline: 30px;
+		}
+
+		@include xl {
+			padding: 50px calc(30px - var(--base-border-w));
+		}
+
+		@include xxl {
+			padding: 60px calc(40px - var(--base-border-w));
+		}
+	}
+
+	// .policy__item-body
+	&__item-body {
+		flex-grow: 1;
+		min-width: 0;
+
+		h3 {
+			margin-block-end: 11px;
+			font-size: var(--text-lg);
+			line-height: 1.5;
+
+			@include xl {
+				margin-block-end: 12px;
+				font-size: var(--text-xl);
+			}
+
+			@include xxl {
+				margin-block-end: 16px;
+				font-size: var(--text-2xl);
+			}
+		}
+	}
+}

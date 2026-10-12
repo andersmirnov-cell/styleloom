@@ -1,0 +1,10 @@
+{# decorative icon in a dashed circle with a crosshair #}
+{% macro iconCircle(icon, class = "") %}
+	{% set classes = ["icon-circle", class] | select("truthy") | join(" ") %}
+
+	<figure class="{{ classes }}">
+		<div class="icon-circle__holder">
+			<img src="{{ icon }}" alt="" loading="lazy" />
+		</div>
+	</figure>
+{% endmacro %}

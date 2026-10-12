@@ -1,0 +1,38 @@
+{% extends "layouts/base.njk" %}
+{% from 'components/policy.njk' import policy %}
+{% set pagetitle = "Contact" %}
+{% set currentPage = "contact" %}
+
+{%
+	set returnPolicy = {
+		title: "Return Policy",
+		linkText: "Read Return Policy",
+		href: "#",
+		items: [
+			{ icon: "/src/assets/images/icon-policy-eligibility.svg", title: "Eligibility", text: "Items must be unused, with tags attached, and returned within 30 days of delivery." },
+			{ icon: "/src/assets/images/icon-policy-process.svg", title: "Process", text: "Initiate returns through our Return Center for a smooth and efficient process." },
+			{ icon: "/src/assets/images/icon-policy-refund.svg", title: "Refund", text: "Expect a refund to your original payment method within 7-10 business days." }
+		]
+	}
+%}
+{%
+	set cancellationPolicy = {
+		title: "Cancellation Policy",
+		linkText: "Read Cancellation Policy",
+		href: "#",
+		items: [
+			{ icon: "/src/assets/images/icon-policy-window.svg", title: "Cancellation Window", text: "Orders can be canceled within 24 hours of placement for a full refund." },
+			{ icon: "/src/assets/images/icon-policy-cancel.svg", title: "Cancellation Process", text: "Visit our Order Management section to cancel your order effortlessly." },
+			{ icon: "/src/assets/images/icon-policy-timeline.svg", title: "Refund Timeline", text: "Refunds for canceled orders are processed within 5-7 business days." }
+		]
+	}
+%}
+
+{% block main %}
+	{% include "layouts/_contact-info.njk" %}
+	{{ policy(returnPolicy) }}
+	{{ policy(cancellationPolicy) }}
+	{% include "layouts/_testimonial.njk" %}
+	{% include "layouts/_faq.njk" %}
+	{% include "layouts/_cta-banner.njk" %}
+{% endblock %}

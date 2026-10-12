@@ -1,0 +1,33 @@
+{% from 'components/button.njk' import button %}
+{% from 'components/icon-circle.njk' import iconCircle %}
+{%
+	set contacts = [
+		{ title: "Email", text: "support@StyleLoom.com", href: "mailto:support@StyleLoom.com", icon: "/src/assets/images/icon-contact-email.svg", bgIcon: "/src/assets/images/bg-contact-email.svg" },
+		{ title: "Phone", text: "+1 (555) 123-4567", href: "tel:+15551234567", icon: "/src/assets/images/icon-contact-phone.svg", bgIcon: "/src/assets/images/bg-contact-phone.svg" },
+		{ title: "Location", text: "Get Direction", href: "#", icon: "/src/assets/images/icon-contact-location.svg", bgIcon: "/src/assets/images/bg-contact-location.svg" }
+	]
+%}
+
+<section class="contact-info">
+	<div class="container">
+		<div class="contact-info__holder">
+			<header class="contact-info__header">
+				<h1>Your Partner in Every Step of Your Fashion Journey.</h1>
+				<p>24/7 Assistance for Seamless Shopping and Unmatched Customer Satisfaction.</p>
+			</header>
+			<h2 class="contact-info__title">Contact Information</h2>
+			<div class="contact-info__grid">
+				{% for item in contacts %}
+					<div class="contact-info__item" style="background-image: url('{{ item.bgIcon }}')">
+						{{ iconCircle(item.icon) }}
+						<div class="contact-info__item-body">
+							<h3>{{ item.title }}</h3>
+							{{ button(text = item.text, href = item.href, class = "btn--secondary bordered-corners") }}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</section>
+<!-- /.contact-info -->

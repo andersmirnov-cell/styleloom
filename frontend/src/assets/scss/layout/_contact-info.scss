@@ -1,0 +1,162 @@
+@use "../utils/mixins" as *;
+
+/* .contact-info */
+.contact-info {
+	margin-block-end: var(--space-y-base);
+
+	&:first-child {
+		margin-block-start: 20px;
+
+		@include lg {
+			margin-block-start: 40px;
+		}
+	}
+
+	// .contact-info__holder
+	&__holder {
+		border: var(--base-border-style);
+		border-width: var(--base-border-w);
+		border-radius: var(--radius-block-base);
+		overflow: clip;
+	}
+
+	// .contact-info__header
+	&__header {
+		padding: calc(30px - var(--base-border-w)) calc(20px - var(--base-border-w));
+		border-block-end: var(--base-border-style);
+		border-block-end-width: var(--base-border-w);
+
+		@include xl {
+			padding: calc(60px - var(--base-border-w));
+			padding-inline-end: 250px;
+			background: url("../../images/bg-contact-header.svg") no-repeat calc(100% + 100px)
+				calc(50% - 7px) / 316px auto;
+		}
+
+		@include xxl {
+			padding: calc(80px - var(--base-border-w));
+			padding-inline-end: 300px;
+			background-size: 446px auto;
+			background-position: calc(100% + 130px) 50%;
+		}
+
+		h1 {
+			margin-block-end: 20px;
+
+			@include xl {
+				margin-block-end: 24px;
+			}
+
+			@include xxl {
+				margin-block-end: 30px;
+			}
+		}
+
+		p {
+			color: var(--gray-40);
+		}
+	}
+
+	// .contact-info__title
+	// no heading row on mobile, so it stays for screen readers only
+	&__title {
+		margin: 0;
+		padding: 30px;
+		font-size: var(--text-2xl);
+		line-height: 1.171875;
+
+		@include md-down {
+			@include sr-only;
+		}
+
+		@include xl {
+			padding: 40px;
+		}
+
+		@include xxl {
+			padding: 50px;
+			font-size: 30px;
+		}
+	}
+
+	// .contact-info__grid
+	&__grid {
+		@include md {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			column-gap: var(--base-border-w);
+			column-rule: var(--base-border-style);
+			column-rule-width: var(--base-border-w);
+			border-block-start: var(--base-border-style);
+			border-block-start-width: var(--base-border-w);
+		}
+	}
+
+	// .contact-info__item
+	&__item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 24px;
+		padding: 30px;
+		background-repeat: no-repeat;
+		background-position: right -30px top -25px;
+		background-size: 120px;
+
+		@include md-down {
+			&:not(:last-child) {
+				border-block-end: var(--base-border-style);
+				border-block-end-width: var(--base-border-w);
+			}
+		}
+
+		@include xl {
+			gap: 40px;
+			padding: 50px;
+			background-position: right -37px top -65px;
+			background-size: 200px;
+		}
+
+		@include xxl {
+			gap: 49px;
+			padding: 59px;
+			background-position: right -73px top -55px;
+			background-size: 246px;
+		}
+	}
+
+	// .contact-info__item-body
+	&__item-body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+		width: 100%;
+
+		@include xl {
+			gap: 12px;
+		}
+
+		@include xxl {
+			gap: 16px;
+		}
+
+		h3 {
+			margin: 0;
+			font-size: var(--text-lg);
+			line-height: 1.5;
+
+			@include xl {
+				font-size: var(--text-xl);
+			}
+
+			@include xxl {
+				font-size: var(--text-2xl);
+			}
+		}
+
+		.btn {
+			width: 100%;
+		}
+	}
+}

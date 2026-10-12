@@ -16,6 +16,8 @@
 @use "components/marquee-links";
 @use "components/social-links";
 @use "components/newsletter-form";
+@use "components/icon-circle";
+@use "components/policy";
 
 // Layout
 @use "layout/header";
@@ -25,6 +27,7 @@
 @use "layout/journey";
 @use "layout/latest-collection";
 @use "layout/product-detail";
+@use "layout/contact-info";
 @use "layout/testimonial";
 @use "layout/faq";
 @use "layout/cta-banner";

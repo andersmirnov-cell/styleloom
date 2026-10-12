@@ -1,0 +1,30 @@
+{% from 'components/button.njk' import button %}
+{% from 'components/icon-circle.njk' import iconCircle %}
+
+{# policy = { title, linkText, href, items: [{ icon, title, text }] } #}
+{% macro policy(data, class = "") %}
+	{% set classes = ["policy", class] | select("truthy") | join(" ") %}
+
+	<section class="{{ classes }}">
+		<div class="container">
+			<div class="policy__holder">
+				<header class="policy__header">
+					<h2>{{ data.title }}</h2>
+					{{ button(text = data.linkText, href = data.href, class = "btn--secondary bordered-corners", icon = "/src/assets/images/icon-arrow-up-right.svg") }}
+				</header>
+				<div class="policy__grid">
+					{% for item in data.items %}
+						<div class="policy__item">
+							{{ iconCircle(item.icon) }}
+							<div class="policy__item-body">
+								<h3>{{ item.title }}</h3>
+								<p>{{ item.text }}</p>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- /.policy -->
+{% endmacro %}
