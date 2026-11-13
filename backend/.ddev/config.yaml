@@ -1,18 +1,23 @@
 name: backend
 type: wordpress
-docroot: ""
-php_version: "8.4"
+docroot: ''
+php_version: '8.4'
 webserver_type: nginx-fpm
 xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns: []
 database:
     type: mariadb
-    version: "11.8"
+    version: '11.8'
 use_dns_when_possible: true
-composer_version: "2"
-web_environment: []
-nodejs_version: "24"
+composer_version: '2'
+web_environment:
+    - WP_DEBUG=true
+    - WP_DEBUG_LOG=true
+    - WP_DEBUG_DISPLAY=true
+    - SCRIPT_DEBUG=true
+    - SAVEQUERIES=true
+nodejs_version: '24'
 corepack_enable: false
 
 # Key features of DDEV's config.yaml:

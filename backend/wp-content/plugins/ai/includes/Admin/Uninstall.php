@@ -1,0 +1,493 @@
+<?php
+/**
+ * Handles removal of the plugin's data on uninstall.
+ *
+ * @package WordPress\AI\Admin
+ * @since 1.3.0
+ */
+
+declare( strict_types=1 );
+
+namespace WordPress\AI\Admin;
+
+use WordPress\AI\Embeddings\Embedding_Schema;
+use WordPress\AI\Embeddings\Sync\Sync_Queue_Schema;
+use WordPress\AI\Embeddings\Sync\Sync_Worker;
+use WordPress\AI\Experiments\C2pa_Monitor\C2pa_Monitor;
+use WordPress\AI\Experiments\C2pa_Monitor\Sidecar_Writer;
+use WordPress\AI\Experiments\Comment_Moderation\Comment_Moderation;
+use WordPress\AI\Experiments\Key_Encryption\Secrets_Bridge;
+use WordPress\AI\Experiments\Text_To_Speech\Job_Manager;
+use WordPress\AI\Logging\AI_Request_Log_Schema;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Class - Uninstall.
+ *
+ * Removes the plugin's custom table, options and scheduled events by default.
+ * Developers can opt out by returning false from the
+ * "wpai_remove_data_on_uninstall" filter to preserve the plugin's data.
+ *
+ * @internal
+ *
+ * @since 1.3.0
+ */
+final class Uninstall {
+
+	/**
+	 * Scheduled cron hook used by the request log manager.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @var string
+	 */
+	private const REQUEST_LOG_CLEANUP_HOOK = 'wpai_request_logs_cleanup';
+
+	/**
+	 * User meta key set when the connector approval notice is dismissed.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @var string
+	 */
+	private const CONNECTOR_APPROVAL_NOTICE_META = 'wpai_connector_approval_notice_dismissed';
+
+	/**
+	 * Runs the uninstall routine.
+	 *
+	 * Cleanup happens by default unless a developer opts out via the
+	 * "wpai_remove_data_on_uninstall" filter. On multisite the filter is
+	 * evaluated per site so each site keeps control of its own data.
+	 *
+	 * @since 1.3.0
+	 */
+	public static function run(): void {
+		if ( is_multisite() ) {
+			$site_ids = get_sites(
+				array(
+					'fields' => 'ids',
+					'number' => 0,
+				)
+			);
+
+			$cleaned_any_site = false;
+
+			foreach ( $site_ids as $site_id ) {
+				switch_to_blog( (int) $site_id ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.switch_to_blog_switch_to_blog
+				$cleaned_any_site = self::maybe_clean_current_site() || $cleaned_any_site;
+				restore_current_blog();
+			}
+
+			// Network-level data is shared by every site, so it is cleaned once
+			// rather than inside the loop, and only when at least one site opted in.
+			if ( $cleaned_any_site ) {
+				self::delete_network_transients();
+			}
+
+			return;
+		}
+
+		self::maybe_clean_current_site();
+	}
+
+	/**
+	 * Removes the plugin's data for the current site when opted in.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return bool Whether the data was removed.
+	 */
+	private static function maybe_clean_current_site(): bool {
+		/**
+		 * Filters whether the plugin should remove all of its data on uninstall.
+		 *
+		 * Removal is enabled by default. Return false to keep the plugin's
+		 * custom table, options, transients and scheduled events for the current
+		 * site. On multisite this filter runs once per site.
+		 *
+		 * Connector API keys encrypted by the Key Encryption experiment are restored
+		 * to their plaintext options either way.
+		 *
+		 * @since 1.3.0
+		 *
+		 * @param bool $remove_data Whether to remove all plugin data. Default true.
+		 */
+		$remove_data = (bool) apply_filters( 'wpai_remove_data_on_uninstall', true );
+
+		self::restore_encrypted_keys();
+
+		if ( ! $remove_data ) {
+			return false;
+		}
+
+		self::drop_request_logs_table();
+		self::drop_embeddings_table();
+		self::drop_embedding_queue_table();
+		self::delete_options();
+		self::delete_meta();
+		self::delete_c2pa_sidecars();
+		self::delete_tts_temp_files();
+		self::delete_transients();
+		self::clear_scheduled_events();
+
+		return true;
+	}
+
+	/**
+	 * Restores the current site's encrypted connector API keys to plaintext options.
+	 *
+	 * Deactivation does not always run first, e.g. with `wp plugin deactivate --skip-plugins`.
+	 *
+	 * @since 1.5.0
+	 */
+	private static function restore_encrypted_keys(): void {
+		// The plugin is not bootstrapped during uninstall, so its helpers are not loaded.
+		require_once dirname( __DIR__ ) . '/helpers.php';
+
+		( new Secrets_Bridge() )->decrypt_all();
+	}
+
+	/**
+	 * Drops the request logs custom table.
+	 *
+	 * @since 1.3.0
+	 */
+	private static function drop_request_logs_table(): void {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . AI_Request_Log_Schema::TABLE_NAME;
+
+		$wpdb->query( "DROP TABLE IF EXISTS `{$table_name}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	}
+
+	/**
+	 * Drops the embeddings custom table.
+	 *
+	 * @since 1.4.0
+	 */
+	private static function drop_embeddings_table(): void {
+		( new Embedding_Schema() )->drop_table();
+	}
+
+	/**
+	 * Drops the embedding sync queue table.
+	 *
+	 * @since 1.5.0
+	 */
+	private static function drop_embedding_queue_table(): void {
+		( new Sync_Queue_Schema() )->drop_table();
+	}
+
+	/**
+	 * Deletes all of the plugin's options.
+	 *
+	 * @since 1.3.0
+	 */
+	private static function delete_options(): void {
+		// Option name prefixes owned by the plugin. `wpai_` covers settings,
+		// feature toggles, versions and connector approvals; `ai_experiment_`
+		// covers options left over from pre-1.0 installs; `_secret_ai/` covers
+		// the connector API keys encrypted by the Key Encryption experiment.
+		$prefixes = array(
+			'wpai_',
+			'ai_experiment_',
+			self::secrets_option_prefix(),
+			'_wp_secret_' . Secrets_Bridge::SECRET_NAMESPACE . '/',
+		);
+
+		foreach ( $prefixes as $prefix ) {
+			foreach ( self::get_option_names_by_prefix( $prefix ) as $option_name ) {
+				delete_option( $option_name );
+			}
+		}
+
+		// List through the Secrets API so secrets kept by a `secrets.php` drop-in are
+		// deleted too, including those of connectors that are no longer registered.
+		if ( function_exists( 'wp_list_secrets' ) && function_exists( 'wp_delete_secret' ) ) {
+			$secrets = wp_list_secrets( Secrets_Bridge::SECRET_NAMESPACE );
+			if ( is_array( $secrets ) ) {
+				foreach ( $secrets as $secret ) {
+					wp_delete_secret( $secret['name'] );
+				}
+			}
+		}
+
+		// Exact option names that don't share a plugin prefix: legacy pre-1.0
+		// options from the plugin's own AI Credentials screen, which was replaced
+		// by the Connectors approach.
+		$option_names = array(
+			'ai_experiments_enabled',
+			'wp_ai_client_provider_credentials',
+		);
+
+		foreach ( $option_names as $option_name ) {
+			delete_option( $option_name );
+		}
+
+		self::maybe_delete_secrets_master_key();
+	}
+
+	/**
+	 * Deletes the Secrets master key, but only once nothing else depends on it.
+	 *
+	 * The pre-1.5.0 format came from the Displace Secrets Manager, so the same
+	 * option can be in use by that plugin or anything else built on it. Deleting it while other
+	 * `_secret_*` rows exist would make those secrets permanently undecryptable,
+	 * so it is only removed when this plugin's secrets were the last ones left.
+	 *
+	 * @since 1.3.0
+	 */
+	private static function maybe_delete_secrets_master_key(): void {
+		global $wpdb;
+
+		$remaining = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s AND option_name != %s LIMIT 1",
+				$wpdb->esc_like( Secrets_Bridge::LEGACY_OPTION_PREFIX ) . '%',
+				Secrets_Bridge::LEGACY_MASTER_KEY_OPTION
+			)
+		);
+
+		if ( null !== $remaining ) {
+			return;
+		}
+
+		delete_option( Secrets_Bridge::LEGACY_MASTER_KEY_OPTION );
+	}
+
+	/**
+	 * Deletes the plugin's metadata.
+	 *
+	 * Removes user meta, the C2PA Monitor post meta, and the Comment Moderation
+	 * analysis comment meta.
+	 *
+	 * Only metadata owned by the plugin is removed. Metadata that the plugin
+	 * writes to but does not own (e.g. core `_wp_attachment_image_alt` or
+	 * third-party SEO description keys) is left untouched, as is generated
+	 * content such as summaries and AI-authored notes.
+	 *
+	 * @since 1.3.0
+	 */
+	private static function delete_meta(): void {
+		global $wpdb;
+
+		// User meta: connector approval notice dismissal flag.
+		$user_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s",
+				self::CONNECTOR_APPROVAL_NOTICE_META
+			)
+		);
+
+		/** @var list<string> $user_ids */
+		foreach ( $user_ids as $user_id ) {
+			delete_user_meta( (int) $user_id, self::CONNECTOR_APPROVAL_NOTICE_META );
+		}
+
+		// Post meta: the C2PA Monitor scan record and the sort helper key it
+		// mirrors. Both are written by this plugin and carry no meaning without it.
+		delete_post_meta_by_key( C2pa_Monitor::POSTMETA_KEY );
+		delete_post_meta_by_key( C2pa_Monitor::SORT_META_KEY );
+
+		// Comment Moderation analysis results and status.
+		$comment_meta_keys = array(
+			Comment_Moderation::META_TOXICITY_SCORE,
+			Comment_Moderation::META_SENTIMENT,
+			Comment_Moderation::META_VALUE_SCORE,
+			Comment_Moderation::META_ANALYSIS_STATUS,
+			Comment_Moderation::META_ANALYZED_AT,
+		);
+
+		foreach ( $comment_meta_keys as $meta_key ) {
+			delete_metadata( 'comment', 0, $meta_key, '', true );
+		}
+	}
+
+	/**
+	 * Deletes the C2PA Monitor sidecar files and their directory.
+	 *
+	 * Sidecars hold raw manifest bytes extracted from attachments at upload
+	 * time. The attachment originals still carry the same manifest, so nothing
+	 * is lost here that re-enabling the experiment could not re-derive. Files
+	 * this plugin did not write are left in place, and the directory itself is
+	 * only removed once it is empty.
+	 *
+	 * @since 1.5.0
+	 */
+	private static function delete_c2pa_sidecars(): void {
+		// Pass false so wp_upload_dir() never creates directories during cleanup.
+		$uploads = wp_upload_dir( null, false );
+
+		if ( ! empty( $uploads['error'] ) || empty( $uploads['basedir'] ) ) {
+			return;
+		}
+
+		$dir = trailingslashit( (string) $uploads['basedir'] ) . Sidecar_Writer::SUBDIR;
+
+		if ( ! is_dir( $dir ) ) {
+			return;
+		}
+
+		$sidecars = glob( trailingslashit( $dir ) . '*.c2pa' );
+
+		if ( is_array( $sidecars ) ) {
+			foreach ( $sidecars as $sidecar ) {
+				wp_delete_file( $sidecar );
+			}
+		}
+
+		// Hardening files written by Sidecar_Writer::ensure_dir().
+		foreach ( array( '.htaccess', 'index.php' ) as $hardening_file ) {
+			$path = trailingslashit( $dir ) . $hardening_file;
+
+			if ( ! is_file( $path ) ) {
+				continue;
+			}
+
+			wp_delete_file( $path );
+		}
+
+		$remaining = scandir( $dir );
+
+		// scandir() reports "." and ".." for an otherwise empty directory, so
+		// anything more than that means files the plugin did not write remain.
+		if ( ! is_array( $remaining ) || 2 !== count( $remaining ) ) {
+			return;
+		}
+
+		global $wp_filesystem;
+
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		WP_Filesystem();
+
+		// Leaving the empty directory behind is harmless, so a filesystem that
+		// refuses to initialise is not worth failing the uninstall over.
+		if ( ! $wp_filesystem instanceof \WP_Filesystem_Base ) {
+			return;
+		}
+
+		$wp_filesystem->delete( $dir, false, 'd' );
+	}
+
+	/**
+	 * Deletes partial audio files left behind by unfinished Text to Speech jobs.
+	 *
+	 * @since 1.5.0
+	 */
+	private static function delete_tts_temp_files(): void {
+		$uploads = wp_upload_dir( null, false );
+
+		if ( ! empty( $uploads['error'] ) || empty( $uploads['basedir'] ) ) {
+			return;
+		}
+
+		$temp_files = glob( trailingslashit( (string) $uploads['basedir'] ) . Job_Manager::TEMP_FILE_PREFIX . '*.part' );
+
+		if ( ! is_array( $temp_files ) ) {
+			return;
+		}
+
+		foreach ( $temp_files as $temp_file ) {
+			wp_delete_file( $temp_file );
+		}
+	}
+
+	/**
+	 * Deletes the plugin's transients for the current site.
+	 *
+	 * @since 1.3.0
+	 */
+	private static function delete_transients(): void {
+		$prefix = '_transient_';
+
+		foreach ( self::get_option_names_by_prefix( $prefix . 'wpai_' ) as $option_name ) {
+			// delete_transient() removes the paired timeout row and the cached value.
+			delete_transient( substr( $option_name, strlen( $prefix ) ) );
+		}
+
+		if ( is_multisite() ) {
+			// On multisite, site transients are network-level and live in the
+			// sitemeta table, so they are handled by delete_network_transients().
+			return;
+		}
+
+		$site_prefix = '_site_transient_';
+
+		foreach ( self::get_option_names_by_prefix( $site_prefix . 'wpai_' ) as $option_name ) {
+			delete_site_transient( substr( $option_name, strlen( $site_prefix ) ) );
+		}
+	}
+
+	/**
+	 * Deletes the plugin's network-level site transients on multisite.
+	 *
+	 * @since 1.3.0
+	 */
+	private static function delete_network_transients(): void {
+		global $wpdb;
+
+		$prefix = '_site_transient_';
+
+		$meta_keys = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT meta_key FROM {$wpdb->sitemeta} WHERE site_id = %d AND meta_key LIKE %s",
+				get_current_network_id(),
+				$wpdb->esc_like( $prefix . 'wpai_' ) . '%'
+			)
+		);
+
+		/** @var list<string> $meta_keys */
+		foreach ( $meta_keys as $meta_key ) {
+			delete_site_transient( substr( $meta_key, strlen( $prefix ) ) );
+		}
+	}
+
+	/**
+	 * Clears the plugin's scheduled cron events.
+	 *
+	 * @since 1.3.0
+	 */
+	private static function clear_scheduled_events(): void {
+		wp_clear_scheduled_hook( self::REQUEST_LOG_CLEANUP_HOOK );
+		wp_clear_scheduled_hook( Sync_Worker::CRON_HOOK );
+
+		wp_unschedule_hook( Job_Manager::CRON_HOOK );
+	}
+
+	/**
+	 * Returns the option name prefix used for this plugin's encrypted secrets.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return string The option name prefix, e.g. "_secret_ai/".
+	 */
+	private static function secrets_option_prefix(): string {
+		return Secrets_Bridge::LEGACY_OPTION_PREFIX . Secrets_Bridge::SECRET_NAMESPACE . '/';
+	}
+
+	/**
+	 * Returns every option name in the current site that starts with a prefix.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param string $prefix Literal option name prefix to match.
+	 * @return list<string> Matching option names.
+	 */
+	private static function get_option_names_by_prefix( string $prefix ): array {
+		global $wpdb;
+
+		$option_names = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+				$wpdb->esc_like( $prefix ) . '%'
+			)
+		);
+
+		return array_values( array_map( 'strval', $option_names ) );
+	}
+}
