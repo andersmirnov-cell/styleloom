@@ -1,0 +1,51 @@
+<?php declare(strict_types = 1);
+/**
+ * Request and response headers output for HTML pages.
+ *
+ * @package query-monitor
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class QM_Output_Html_Headers extends QM_Output_Html {
+
+	/**
+	 * Collector instance.
+	 *
+	 * @var QM_Collector_Raw_Request Collector.
+	 */
+	protected $collector;
+
+	/**
+	 * @var bool
+	 */
+	public static $client_side_rendered = true;
+
+	/**
+	 * Collector name.
+	 *
+	 * This is unused.
+	 *
+	 * @return string
+	 */
+	public function name() {
+		return __( 'Request Data', 'query-monitor' );
+	}
+}
+
+/**
+ * @param array<string, QM_Output> $output
+ * @param QM_Collectors $collectors
+ * @return array<string, QM_Output>
+ */
+function register_qm_output_html_headers( array $output, QM_Collectors $collectors ) {
+	$collector = QM_Collectors::get( 'raw_request' );
+	if ( $collector ) {
+		$output['raw_request'] = new QM_Output_Html_Headers( $collector );
+	}
+	return $output;
+}
+
+add_filter( 'qm/outputter/html', 'register_qm_output_html_headers', 100, 2 );
