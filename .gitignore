@@ -7,7 +7,20 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 mockups/
-backend/notes.md
+
+backend/*
+!backend/wp-content/
+
+backend/wp-content/*
+!backend/wp-content/plugins/
+!backend/wp-content/themes/
+
+backend/wp-content/plugins/*
+!backend/wp-content/plugins/my-plugin/
+
+backend/wp-content/themes/*
+!backend/wp-content/themes/my-theme/
+
 
 node_modules
 dist
